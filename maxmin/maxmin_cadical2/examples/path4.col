@@ -1,0 +1,5 @@
+c Path graph with 4 vertices: 0-1-2-3
+p edge 4 3
+e 1 2
+e 2 3
+e 3 4

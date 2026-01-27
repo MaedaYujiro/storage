@@ -1,0 +1,7 @@
+c Cycle graph with 5 vertices: 0-1-2-3-4-0
+p edge 5 5
+e 1 2
+e 2 3
+e 3 4
+e 4 5
+e 5 1

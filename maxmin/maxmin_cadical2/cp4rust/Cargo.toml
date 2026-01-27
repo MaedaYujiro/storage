@@ -1,0 +1,15 @@
+[package]
+name = "cp4rust"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+path = "src/lib.rs"
+
+[[bin]]
+name = "cp4rust"
+path = "src/main.rs"
+
+[dependencies]
+cadical-sys = "0.7"
+bddminisat-sys = "0.1"

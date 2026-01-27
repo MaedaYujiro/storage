@@ -1,0 +1,5 @@
+c Grid graph 4x1
+p edge 4 3
+e 1 2
+e 2 3
+e 3 4
