@@ -82,23 +82,23 @@ impl MdsSolverTrans {
         (csp, x)
     }
 
-    /// Count CNF statistics by actually encoding the CSP
-    fn count_cnf_stats(&self, csp: &CSP) -> (i32, i32) {
-        let backend = CaDiCaLSolver::new();
-        let mut encoder = OrderEncoderLe::new(&csp, backend);
-        encoder.encode_csp();
+    /// Count CNF statistics for the original CSP (domination constraints only)
+    fn count_cnf_stats(&self) -> (i32, i32) {
+        // Each vertex has one Bool variable
+        let num_vars = self.graph.num_vertices as i32;
 
-        let vars = encoder.state().sat_variable_count as i32;
-        let clauses = encoder.state().sat_clause_count as i32;
-        (vars, clauses)
+        // Domination constraint for each vertex: x_v ∨ (∨_{u ∈ N(v)} x_u)
+        // This becomes one clause per vertex
+        let num_clauses = self.graph.num_vertices as i32;
+
+        (num_vars, num_clauses)
     }
 
     pub fn enumerate_minimal(&self) -> (Vec<Vec<usize>>, (i32, i32), (i32, i32)) {
         // Return (results, (orig_vars, orig_clauses), (encoded_vars, encoded_clauses))
         
         // Measure orig stats (domination only)
-        let (csp_orig, _) = self.build_csp(false);
-        let (orig_vars, orig_clauses) = self.count_cnf_stats(&csp_orig);
+        let (orig_vars, orig_clauses) = self.count_cnf_stats();
 
         // Build the full CSP with minimality constraints for solving
         let (mut csp, x) = self.build_csp(true);
