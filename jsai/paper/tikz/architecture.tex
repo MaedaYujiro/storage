@@ -1,0 +1,163 @@
+\begin{tikzpicture}[
+  font=\normalsize,
+  >=Stealth,
+  node distance=14mm and 22mm,
+  module/.style={
+    rectangle, rounded corners,
+    draw=blue!60, thick,
+    fill=blue!8,
+    align=center,
+    minimum width=40mm,
+    minimum height=14mm,
+    inner sep=6pt
+  },
+  data/.style={
+    rectangle, rounded corners,
+    draw=green!60!black, thick,
+    fill=green!10,
+    align=center,
+    minimum width=36mm,
+    minimum height=14mm,
+    inner sep=6pt
+  },
+  external/.style={
+    rectangle, rounded corners,
+    draw=orange!70!black, thick,
+    fill=orange!12,
+    align=center,
+    minimum width=42mm,
+    minimum height=14mm,
+    inner sep=6pt
+  },
+  flow/.style={->, thick},
+  altflow/.style={->, thick, dashed},
+  loop/.style={->, thick, dotted}
+]
+
+% ============================================================
+% 入力層
+% ============================================================
+\node[data] (dimacs) {DIMACS\\グラフ};
+\node[module, right=of dimacs] (graph) {Graph\\隣接リスト};
+
+\draw[flow] (dimacs) -- (graph);
+
+% ============================================================
+% 問題定式化層（左）
+% ============================================================
+\node[module, right=of graph, yshift=26mm] (mds) {MDS 定式化};
+\node[module, right=of graph, yshift=-26mm] (mis) {MIS 定式化};
+
+\draw[flow] (graph) -- (mds);
+\draw[flow] (graph) -- (mis);
+
+% ============================================================
+% MDS 系（右上ブロック）
+% ============================================================
+\node[module, right=26mm of mds, yshift=-12mm] (mds_basic)
+{MDS\\直接 CNF};
+
+\node[module, right=26mm of mds, yshift=12mm] (mds_trans)
+{MDS\\CSP 変換};
+
+\draw[altflow]
+  (mds) -- node[midway, above]
+  {\cite{koshimura2009minimal}の変換}
+  (mds_basic);
+\draw[flow]    
+  (mds) -- node[midway, above]
+  {提案変換}
+  (mds_trans);
+
+% ============================================================
+% MIS 系（右下ブロック）
+% ============================================================
+\node[module, right=26mm of mis, yshift=-12mm] (mis_basic)
+{MIS\\直接 CNF};
+
+\node[module, right=26mm of mis, yshift=12mm] (mis_trans)
+{MIS\\CSP 変換};
+
+\draw[altflow] 
+  (mis) -- node[midway, above]
+  {\cite{koshimura2009minimal}の変換}
+  (mis_basic);
+\draw[flow]    
+  (mis) -- node[midway, above]
+  {\cite{adachi2023}の変換}
+  (mis_trans);
+
+% ============================================================
+% CSP 層
+% ============================================================
+\node[module, right=32mm of mds_trans, yshift=-26mm] (csp)
+{CSP 構築\\(cp4rust)};
+
+\draw[flow] (mds_trans) -- (csp);
+\draw[flow] (mis_trans) -- (csp);
+
+% ============================================================
+% エンコード層
+% ============================================================
+\node[module, right=of csp] (encoder)
+{SAT 変換\\OrderEncoderLe};
+
+\draw[flow] (csp) -- (encoder);
+
+% ============================================================
+% SAT ソルバ層
+% ============================================================
+\node[external, below=24mm of encoder] (solver)
+{CaDiCaL\\all\_solutions()};
+
+\node[module, right=of solver] (blocking)
+{ブロッキング節\\$\neg$ 現在解};
+
+\draw[flow] (encoder) -- (solver);
+\draw[flow] (mds_basic) -- (solver);
+\draw[flow] (mis_basic) -- (solver);
+\draw[loop] (solver) -- (blocking);
+\draw[loop] (blocking) -- (solver);
+
+% ============================================================
+% 出力層
+% ============================================================
+\node[data, below=18mm of solver, xshift=-20mm] (solutions)
+{解集合\\$\{v_1,v_2,\dots\}$};
+
+\node[data, below=18mm of solver, xshift=+20mm] (stats)
+{統計情報\\変数数 / 節数};
+
+\draw[flow] (solver) -- (solutions);
+\draw[flow] (solver) -- (stats);
+
+% ============================================================
+% レイヤ枠
+% ============================================================
+\begin{pgfonlayer}{background}
+\node[draw=black!30, rounded corners, thick,
+      fit=(dimacs)(graph),
+      label=above:{入力層}] {};
+
+\node[draw=black!30, rounded corners, thick,
+      fit=(mds)(mis)(mds_basic)(mds_trans)(mis_basic)(mis_trans),
+      label=above:{問題定式化層}] {};
+
+\node[draw=black!30, rounded corners, thick,
+      fit=(csp),
+      label=above:{制約層（CSP）}] {};
+
+\node[draw=black!30, rounded corners, thick,
+      fit=(encoder),
+      label=above:{エンコード層}] {};
+
+\node[draw=black!30, rounded corners, thick,
+      fit=(solver)(blocking),
+      label=above:{SAT ソルバ層}] {};
+
+\node[draw=black!30, rounded corners, thick,
+      fit=(solutions)(stats),
+      label=above:{出力層}] {};
+\end{pgfonlayer}
+
+\end{tikzpicture}

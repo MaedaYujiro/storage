@@ -1,0 +1,122 @@
+This is e-upTeX, Version 3.141592653-p4.1.1-u1.30-230214-2.6 (utf8.sjis) (TeX Live 2024) (preloaded format=platex 2024.9.21)  7 DEC 2024 10:02
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**guide-ntt.tex
+(./guide-ntt.tex
+pLaTeX2e <2023-02-14>+1, based on
+LaTeX2e <2024-06-01> patch level 2
+L3 programming layer <2024-08-30>
+(c:/texlive/2024/texmf-dist/tex/platex/base/pl209.def
+Entering pLaTeX 2.09 compatibility mode.
+(c:/texlive/2024/texmf-dist/tex/latex/base/latex209.def
+File: latex209.def 2020/11/26 v0.55 Standard LaTeX file
+
+
+          Entering LaTeX 2.09 COMPATIBILITY MODE
+ *************************************************************
+    !!WARNING!!    !!WARNING!!    !!WARNING!!    !!WARNING!!   
+ 
+ This mode attempts to provide an emulation of the LaTeX 2.09
+ author environment so that OLD documents can be successfully
+ processed. It should NOT be used for NEW documents!
+ 
+ New documents should use Standard LaTeX conventions and start
+ with the \documentclass command.
+ 
+ Compatibility mode is UNLIKELY TO WORK with LaTeX 2.09 style
+ files that change any internal macros, especially not with
+ those that change the FONT SELECTION or OUTPUT ROUTINES.
+ 
+ Therefore such style files MUST BE UPDATED to use
+          Current Standard LaTeX: LaTeX2e.
+ If you suspect that you may be using such a style file, which
+ is probably very, very old by now, then you should attempt to
+ get it updated by sending a copy of this error message to the
+ author of that file.
+ *************************************************************
+
+\footheight=\dimen157
+\@maxsep=\dimen158
+\@dblmaxsep=\dimen159
+\@cla=\count193
+\@clb=\count194
+\mscount=\count195
+(c:/texlive/2024/texmf-dist/tex/latex/base/tracefnt.sty
+Package: tracefnt 2020/12/22 v3.0n Standard LaTeX package (font tracing)
+\tracingfonts=\count196
+LaTeX Info: Redefining \selectfont on input line 107.
+Applying: [2021/06/01] Add hook to \selectfont  on input line 142.
+Already applied: [0000/00/00] Add hook to \selectfont  on input line 145.
+)
+\symbold=\mathgroup4
+\symsans=\mathgroup5
+\symtypewriter=\mathgroup6
+\symitalic=\mathgroup7
+\symsmallcaps=\mathgroup8
+\symslanted=\mathgroup9
+LaTeX Font Info:    Redeclaring math alphabet \mathbf on input line 275.
+LaTeX Font Info:    Redeclaring math alphabet \mathsf on input line 276.
+LaTeX Font Info:    Redeclaring math alphabet \mathtt on input line 277.
+LaTeX Font Info:    Redeclaring math alphabet \mathit on input line 283.
+LaTeX Info: Redefining \em on input line 293.
+
+(c:/texlive/2024/texmf-dist/tex/latex/base/latexsym.sty
+Package: latexsym 1998/08/17 v2.2e Standard LaTeX package (lasy symbols)
+\symlasy=\mathgroup10
+LaTeX Font Info:    Overwriting symbol font `lasy' in version `bold'
+(Font)                  U/lasy/m/n --> U/lasy/b/n on input line 52.
+)
+LaTeX Font Info:    Redeclaring math delimiter \lgroup on input line 339.
+LaTeX Font Info:    Redeclaring math delimiter \rgroup on input line 341.
+LaTeX Font Info:    Redeclaring math delimiter \bracevert on input line 343.
+)
+(c:/texlive/2024/texmf-dist/tex/platex/base/ptrace.sty
+Package: ptrace 2021/06/27 v1.7n Standard pLaTeX package (font tracing)
+Applying: [2020/04/12] Check \KanjiEncodingPair  on input line 21.
+LaTeX Info: Redefining \selectfont on input line 84.
+Already applied: [0000/00/00] ASCII Corporation original on input line 187.
+Applying: [2017/04/08] Construct \ystrutbox  on input line 245.
+Already applied: [0000/00/00] ASCII Corporation original on input line 280.
+Applying: [2019/10/01] Make robust on input line 315.
+LaTeX Info: Redefining \adjustbaseline on input line 316.
+Already applied: [2017/07/29] Change zenkaku reference on input line 339.
+Already applied: [0000/00/00] ASCII Corporation original on input line 364.
+)
+\symmincho=\mathgroup11
+\symgothic=\mathgroup12
+LaTeX Font Info:    Overwriting symbol font `mincho' in version `bold'
+(Font)                  JY1/mc/m/n --> JY1/gt/m/n on input line 35.
+LaTeX Info: Redefining \bf on input line 49.
+LaTeX Info: Redefining \rm on input line 56.
+LaTeX Info: Redefining \sf on input line 57.
+LaTeX Info: Redefining \sl on input line 58.
+LaTeX Info: Redefining \sc on input line 59.
+LaTeX Info: Redefining \it on input line 60.
+LaTeX Info: Redefining \tt on input line 61.
+LaTeX Info: Redefining \em on input line 62.
+)
+
+! LaTeX Error: File `j-article.cls' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: cls)
+
+Enter file name: 
+! Emergency stop.
+<read *> 
+         
+l.4 ^^M
+       
+End of file on the terminal!
+
+ 
+Here is how much of TeX's memory you used:
+ 233 strings out of 475686
+ 3501 string characters out of 5779801
+ 379544 words of memory out of 5000000
+ 23095 multiletter control sequences out of 15000+600000
+ 561940 words of font info for 53 fonts, out of 8000000 for 9000
+ 36 hyphenation exceptions out of 8191
+ 45i,0n,43p,204b,24s stack positions out of 10000i,1000n,20000p,200000b,200000s
+No pages of output.

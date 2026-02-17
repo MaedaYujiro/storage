@@ -1,0 +1,13 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {6.1}{\ignorespaces 3$\times $4Grid graphのMIS}}{26}{}%
+\contentsline {figure}{\numberline {6.2}{\ignorespaces 3$\times $4Grid graphのMDS}}{26}{}%
+\contentsline {figure}{\numberline {6.3}{\ignorespaces MDS のCPU時間と結果数のプロット}}{29}{}%
+\contentsline {figure}{\numberline {6.4}{\ignorespaces MIS のCPU時間と結果数のプロット}}{30}{}%
+\contentsline {figure}{\numberline {6.5}{\ignorespaces SATソルバー起動により要したCPU時間の比較}}{31}{}%
+\contentsline {figure}{\numberline {6.6}{\ignorespaces 既存手法と提案手法の計算したモデル数とCPU時間推移}}{31}{}%
+\addvspace {10\p@ }

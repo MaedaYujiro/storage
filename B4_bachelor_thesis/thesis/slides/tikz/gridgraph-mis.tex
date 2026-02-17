@@ -1,0 +1,45 @@
+% tikz/gridgraph.tex
+\begin{tikzpicture}[
+  scale=1.0,
+  v/.style={
+    circle, draw,
+    minimum size=7.2mm,
+    inner sep=0pt,
+    font=\normalsize,
+    text height=1.6ex,
+    text depth=.25ex
+  },
+  dom/.style={v, fill=red},                         % MDS vertex
+  indep/.style={v, fill=green},      % MIS vertex
+  both/.style={v, fill=gray!30, double, double distance=0.9pt}, % both
+  edge/.style={draw, line width=0.65pt},
+  domEdge/.style={draw, densely dashed, line width=0.9pt, dash pattern=on 2.2pt off 1.6pt}
+]
+
+% --- nodes (3x4) ---
+\node[indep] (a) at (0,2) {a};
+\node[v]   (b) at (1,2) {b};
+\node[indep] (c) at (2,2) {c};
+\node[v]     (d) at (3,2) {d};
+
+\node[v]     (e) at (0,1) {e};
+\node[indep] (f) at (1,1) {f};
+\node[v]     (g) at (2,1) {g};
+\node[indep]  (h) at (3,1) {h};
+
+\node[indep]  (i) at (0,0) {i};
+\node[v]     (j) at (1,0) {j};
+\node[indep] (k) at (2,0) {k};
+\node[v]     (l) at (3,0) {l};
+
+% --- grid edges (solid) ---
+\draw[edge] (a)--(b) (b)--(c) (c)--(d);
+\draw[edge] (e)--(f) (f)--(g) (g)--(h);
+\draw[edge] (i)--(j) (j)--(k) (k)--(l);
+
+\draw[edge] (a)--(e) (e)--(i);
+\draw[edge] (b)--(f) (f)--(j);
+\draw[edge] (c)--(g) (g)--(k);
+\draw[edge] (d)--(h) (h)--(l);
+
+\end{tikzpicture}

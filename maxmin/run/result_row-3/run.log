@@ -1,0 +1,407 @@
+mkdir -p result_row-3
+cp csv/BENCH_row-3.csv result_row-3/BENCH.csv
+mkdir -p result_row-3/log
+
+START solving problems in csv/BENCH_row-3.csv
+BEGIN grid3×1.col mis-trans [Tue Dec 23 04:22:05 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×1.col  > result_row-3/log/grid3×1.col__mis-trans.log 2>&1 < /dev/null
+END grid3×1.col mis-trans [Tue Dec 23 04:22:05 2025]
+
+BEGIN grid3×1.col mds-basic [Tue Dec 23 04:22:05 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×1.col  > result_row-3/log/grid3×1.col__mds-basic.log 2>&1 < /dev/null
+END grid3×1.col mds-basic [Tue Dec 23 04:22:05 2025]
+
+BEGIN grid3×1.col mis-basic [Tue Dec 23 04:22:05 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×1.col  > result_row-3/log/grid3×1.col__mis-basic.log 2>&1 < /dev/null
+END grid3×1.col mis-basic [Tue Dec 23 04:22:05 2025]
+
+BEGIN grid3×1.col mds-trans [Tue Dec 23 04:22:05 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×1.col  > result_row-3/log/grid3×1.col__mds-trans.log 2>&1 < /dev/null
+END grid3×1.col mds-trans [Tue Dec 23 04:22:05 2025]
+
+BEGIN grid3×10.col mis-trans [Tue Dec 23 04:22:05 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×10.col  > result_row-3/log/grid3×10.col__mis-trans.log 2>&1 < /dev/null
+END grid3×10.col mis-trans [Tue Dec 23 04:22:05 2025]
+
+BEGIN grid3×10.col mds-basic [Tue Dec 23 04:22:05 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×10.col  > result_row-3/log/grid3×10.col__mds-basic.log 2>&1 < /dev/null
+END grid3×10.col mds-basic [Tue Dec 23 04:43:52 2025]
+
+BEGIN grid3×10.col mis-basic [Tue Dec 23 04:43:52 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×10.col  > result_row-3/log/grid3×10.col__mis-basic.log 2>&1 < /dev/null
+END grid3×10.col mis-basic [Tue Dec 23 04:43:56 2025]
+
+BEGIN grid3×10.col mds-trans [Tue Dec 23 04:43:56 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×10.col  > result_row-3/log/grid3×10.col__mds-trans.log 2>&1 < /dev/null
+END grid3×10.col mds-trans [Tue Dec 23 05:14:00 2025]
+
+BEGIN grid3×11.col mis-trans [Tue Dec 23 05:14:00 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×11.col  > result_row-3/log/grid3×11.col__mis-trans.log 2>&1 < /dev/null
+END grid3×11.col mis-trans [Tue Dec 23 05:14:00 2025]
+
+BEGIN grid3×11.col mds-basic [Tue Dec 23 05:14:00 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×11.col  > result_row-3/log/grid3×11.col__mds-basic.log 2>&1 < /dev/null
+END grid3×11.col mds-basic [Tue Dec 23 05:44:00 2025]
+
+BEGIN grid3×11.col mis-basic [Tue Dec 23 05:44:00 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×11.col  > result_row-3/log/grid3×11.col__mis-basic.log 2>&1 < /dev/null
+END grid3×11.col mis-basic [Tue Dec 23 05:44:24 2025]
+
+BEGIN grid3×11.col mds-trans [Tue Dec 23 05:44:24 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×11.col  > result_row-3/log/grid3×11.col__mds-trans.log 2>&1 < /dev/null
+END grid3×11.col mds-trans [Tue Dec 23 06:14:28 2025]
+
+BEGIN grid3×12.col mis-trans [Tue Dec 23 06:14:28 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×12.col  > result_row-3/log/grid3×12.col__mis-trans.log 2>&1 < /dev/null
+END grid3×12.col mis-trans [Tue Dec 23 06:14:28 2025]
+
+BEGIN grid3×12.col mds-basic [Tue Dec 23 06:14:28 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×12.col  > result_row-3/log/grid3×12.col__mds-basic.log 2>&1 < /dev/null
+END grid3×12.col mds-basic [Tue Dec 23 06:44:28 2025]
+
+BEGIN grid3×12.col mis-basic [Tue Dec 23 06:44:28 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×12.col  > result_row-3/log/grid3×12.col__mis-basic.log 2>&1 < /dev/null
+END grid3×12.col mis-basic [Tue Dec 23 06:46:23 2025]
+
+BEGIN grid3×12.col mds-trans [Tue Dec 23 06:46:23 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×12.col  > result_row-3/log/grid3×12.col__mds-trans.log 2>&1 < /dev/null
+END grid3×12.col mds-trans [Tue Dec 23 07:16:27 2025]
+
+BEGIN grid3×13.col mis-trans [Tue Dec 23 07:16:27 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×13.col  > result_row-3/log/grid3×13.col__mis-trans.log 2>&1 < /dev/null
+END grid3×13.col mis-trans [Tue Dec 23 07:16:27 2025]
+
+BEGIN grid3×13.col mds-basic [Tue Dec 23 07:16:27 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×13.col  > result_row-3/log/grid3×13.col__mds-basic.log 2>&1 < /dev/null
+END grid3×13.col mds-basic [Tue Dec 23 07:46:27 2025]
+
+BEGIN grid3×13.col mis-basic [Tue Dec 23 07:46:27 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×13.col  > result_row-3/log/grid3×13.col__mis-basic.log 2>&1 < /dev/null
+END grid3×13.col mis-basic [Tue Dec 23 07:56:10 2025]
+
+BEGIN grid3×13.col mds-trans [Tue Dec 23 07:56:10 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×13.col  > result_row-3/log/grid3×13.col__mds-trans.log 2>&1 < /dev/null
+END grid3×13.col mds-trans [Tue Dec 23 08:26:14 2025]
+
+BEGIN grid3×14.col mis-trans [Tue Dec 23 08:26:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×14.col  > result_row-3/log/grid3×14.col__mis-trans.log 2>&1 < /dev/null
+END grid3×14.col mis-trans [Tue Dec 23 08:26:14 2025]
+
+BEGIN grid3×14.col mds-basic [Tue Dec 23 08:26:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×14.col  > result_row-3/log/grid3×14.col__mds-basic.log 2>&1 < /dev/null
+END grid3×14.col mds-basic [Tue Dec 23 08:56:14 2025]
+
+BEGIN grid3×14.col mis-basic [Tue Dec 23 08:56:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×14.col  > result_row-3/log/grid3×14.col__mis-basic.log 2>&1 < /dev/null
+END grid3×14.col mis-basic [Tue Dec 23 09:26:14 2025]
+
+BEGIN grid3×14.col mds-trans [Tue Dec 23 09:26:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×14.col  > result_row-3/log/grid3×14.col__mds-trans.log 2>&1 < /dev/null
+END grid3×14.col mds-trans [Tue Dec 23 09:56:19 2025]
+
+BEGIN grid3×15.col mis-trans [Tue Dec 23 09:56:19 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×15.col  > result_row-3/log/grid3×15.col__mis-trans.log 2>&1 < /dev/null
+END grid3×15.col mis-trans [Tue Dec 23 09:56:20 2025]
+
+BEGIN grid3×15.col mds-basic [Tue Dec 23 09:56:20 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×15.col  > result_row-3/log/grid3×15.col__mds-basic.log 2>&1 < /dev/null
+END grid3×15.col mds-basic [Tue Dec 23 10:26:20 2025]
+
+BEGIN grid3×15.col mis-basic [Tue Dec 23 10:26:20 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×15.col  > result_row-3/log/grid3×15.col__mis-basic.log 2>&1 < /dev/null
+END grid3×15.col mis-basic [Tue Dec 23 10:56:20 2025]
+
+BEGIN grid3×15.col mds-trans [Tue Dec 23 10:56:20 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×15.col  > result_row-3/log/grid3×15.col__mds-trans.log 2>&1 < /dev/null
+END grid3×15.col mds-trans [Tue Dec 23 11:25:09 2025]
+
+BEGIN grid3×16.col mis-trans [Tue Dec 23 11:25:09 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×16.col  > result_row-3/log/grid3×16.col__mis-trans.log 2>&1 < /dev/null
+END grid3×16.col mis-trans [Tue Dec 23 11:25:12 2025]
+
+BEGIN grid3×16.col mds-basic [Tue Dec 23 11:25:12 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×16.col  > result_row-3/log/grid3×16.col__mds-basic.log 2>&1 < /dev/null
+END grid3×16.col mds-basic [Tue Dec 23 11:55:12 2025]
+
+BEGIN grid3×16.col mis-basic [Tue Dec 23 11:55:12 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×16.col  > result_row-3/log/grid3×16.col__mis-basic.log 2>&1 < /dev/null
+END grid3×16.col mis-basic [Tue Dec 23 12:25:12 2025]
+
+BEGIN grid3×16.col mds-trans [Tue Dec 23 12:25:12 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×16.col  > result_row-3/log/grid3×16.col__mds-trans.log 2>&1 < /dev/null
+END grid3×16.col mds-trans [Tue Dec 23 12:38:45 2025]
+
+BEGIN grid3×17.col mis-trans [Tue Dec 23 12:38:45 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×17.col  > result_row-3/log/grid3×17.col__mis-trans.log 2>&1 < /dev/null
+END grid3×17.col mis-trans [Tue Dec 23 12:39:03 2025]
+
+BEGIN grid3×17.col mds-basic [Tue Dec 23 12:39:03 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×17.col  > result_row-3/log/grid3×17.col__mds-basic.log 2>&1 < /dev/null
+END grid3×17.col mds-basic [Tue Dec 23 13:09:03 2025]
+
+BEGIN grid3×17.col mis-basic [Tue Dec 23 13:09:03 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×17.col  > result_row-3/log/grid3×17.col__mis-basic.log 2>&1 < /dev/null
+END grid3×17.col mis-basic [Tue Dec 23 13:39:03 2025]
+
+BEGIN grid3×17.col mds-trans [Tue Dec 23 13:39:03 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×17.col  > result_row-3/log/grid3×17.col__mds-trans.log 2>&1 < /dev/null
+END grid3×17.col mds-trans [Tue Dec 23 13:52:33 2025]
+
+BEGIN grid3×18.col mis-trans [Tue Dec 23 13:52:33 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×18.col  > result_row-3/log/grid3×18.col__mis-trans.log 2>&1 < /dev/null
+END grid3×18.col mis-trans [Tue Dec 23 13:54:16 2025]
+
+BEGIN grid3×18.col mds-basic [Tue Dec 23 13:54:16 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×18.col  > result_row-3/log/grid3×18.col__mds-basic.log 2>&1 < /dev/null
+END grid3×18.col mds-basic [Tue Dec 23 14:24:16 2025]
+
+BEGIN grid3×18.col mis-basic [Tue Dec 23 14:24:16 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×18.col  > result_row-3/log/grid3×18.col__mis-basic.log 2>&1 < /dev/null
+END grid3×18.col mis-basic [Tue Dec 23 14:54:16 2025]
+
+BEGIN grid3×18.col mds-trans [Tue Dec 23 14:54:16 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×18.col  > result_row-3/log/grid3×18.col__mds-trans.log 2>&1 < /dev/null
+END grid3×18.col mds-trans [Tue Dec 23 15:08:24 2025]
+
+BEGIN grid3×19.col mis-trans [Tue Dec 23 15:08:24 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×19.col  > result_row-3/log/grid3×19.col__mis-trans.log 2>&1 < /dev/null
+END grid3×19.col mis-trans [Tue Dec 23 15:17:21 2025]
+
+BEGIN grid3×19.col mds-basic [Tue Dec 23 15:17:21 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×19.col  > result_row-3/log/grid3×19.col__mds-basic.log 2>&1 < /dev/null
+END grid3×19.col mds-basic [Tue Dec 23 15:47:21 2025]
+
+BEGIN grid3×19.col mis-basic [Tue Dec 23 15:47:21 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×19.col  > result_row-3/log/grid3×19.col__mis-basic.log 2>&1 < /dev/null
+END grid3×19.col mis-basic [Tue Dec 23 16:17:21 2025]
+
+BEGIN grid3×19.col mds-trans [Tue Dec 23 16:17:21 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×19.col  > result_row-3/log/grid3×19.col__mds-trans.log 2>&1 < /dev/null
+END grid3×19.col mds-trans [Tue Dec 23 16:32:14 2025]
+
+BEGIN grid3×2.col mis-trans [Tue Dec 23 16:32:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×2.col  > result_row-3/log/grid3×2.col__mis-trans.log 2>&1 < /dev/null
+END grid3×2.col mis-trans [Tue Dec 23 16:32:14 2025]
+
+BEGIN grid3×2.col mds-basic [Tue Dec 23 16:32:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×2.col  > result_row-3/log/grid3×2.col__mds-basic.log 2>&1 < /dev/null
+END grid3×2.col mds-basic [Tue Dec 23 16:32:14 2025]
+
+BEGIN grid3×2.col mis-basic [Tue Dec 23 16:32:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×2.col  > result_row-3/log/grid3×2.col__mis-basic.log 2>&1 < /dev/null
+END grid3×2.col mis-basic [Tue Dec 23 16:32:14 2025]
+
+BEGIN grid3×2.col mds-trans [Tue Dec 23 16:32:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×2.col  > result_row-3/log/grid3×2.col__mds-trans.log 2>&1 < /dev/null
+END grid3×2.col mds-trans [Tue Dec 23 16:32:14 2025]
+
+BEGIN grid3×20.col mis-trans [Tue Dec 23 16:32:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×20.col  > result_row-3/log/grid3×20.col__mis-trans.log 2>&1 < /dev/null
+END grid3×20.col mis-trans [Tue Dec 23 17:02:14 2025]
+
+BEGIN grid3×20.col mds-basic [Tue Dec 23 17:02:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×20.col  > result_row-3/log/grid3×20.col__mds-basic.log 2>&1 < /dev/null
+END grid3×20.col mds-basic [Tue Dec 23 17:32:14 2025]
+
+BEGIN grid3×20.col mis-basic [Tue Dec 23 17:32:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×20.col  > result_row-3/log/grid3×20.col__mis-basic.log 2>&1 < /dev/null
+END grid3×20.col mis-basic [Tue Dec 23 18:02:14 2025]
+
+BEGIN grid3×20.col mds-trans [Tue Dec 23 18:02:14 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×20.col  > result_row-3/log/grid3×20.col__mds-trans.log 2>&1 < /dev/null
+END grid3×20.col mds-trans [Tue Dec 23 18:17:43 2025]
+
+BEGIN grid3×21.col mis-trans [Tue Dec 23 18:17:43 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×21.col  > result_row-3/log/grid3×21.col__mis-trans.log 2>&1 < /dev/null
+END grid3×21.col mis-trans [Tue Dec 23 18:47:43 2025]
+
+BEGIN grid3×21.col mds-basic [Tue Dec 23 18:47:43 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×21.col  > result_row-3/log/grid3×21.col__mds-basic.log 2>&1 < /dev/null
+END grid3×21.col mds-basic [Tue Dec 23 19:17:43 2025]
+
+BEGIN grid3×21.col mis-basic [Tue Dec 23 19:17:43 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×21.col  > result_row-3/log/grid3×21.col__mis-basic.log 2>&1 < /dev/null
+END grid3×21.col mis-basic [Tue Dec 23 19:47:43 2025]
+
+BEGIN grid3×21.col mds-trans [Tue Dec 23 19:47:43 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×21.col  > result_row-3/log/grid3×21.col__mds-trans.log 2>&1 < /dev/null
+END grid3×21.col mds-trans [Tue Dec 23 20:03:55 2025]
+
+BEGIN grid3×22.col mis-trans [Tue Dec 23 20:03:55 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×22.col  > result_row-3/log/grid3×22.col__mis-trans.log 2>&1 < /dev/null
+END grid3×22.col mis-trans [Tue Dec 23 20:33:55 2025]
+
+BEGIN grid3×22.col mds-basic [Tue Dec 23 20:33:55 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×22.col  > result_row-3/log/grid3×22.col__mds-basic.log 2>&1 < /dev/null
+END grid3×22.col mds-basic [Tue Dec 23 21:03:55 2025]
+
+BEGIN grid3×22.col mis-basic [Tue Dec 23 21:03:55 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×22.col  > result_row-3/log/grid3×22.col__mis-basic.log 2>&1 < /dev/null
+END grid3×22.col mis-basic [Tue Dec 23 21:33:55 2025]
+
+BEGIN grid3×22.col mds-trans [Tue Dec 23 21:33:55 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×22.col  > result_row-3/log/grid3×22.col__mds-trans.log 2>&1 < /dev/null
+END grid3×22.col mds-trans [Tue Dec 23 21:51:00 2025]
+
+BEGIN grid3×23.col mis-trans [Tue Dec 23 21:51:00 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×23.col  > result_row-3/log/grid3×23.col__mis-trans.log 2>&1 < /dev/null
+END grid3×23.col mis-trans [Tue Dec 23 22:21:00 2025]
+
+BEGIN grid3×23.col mds-basic [Tue Dec 23 22:21:00 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×23.col  > result_row-3/log/grid3×23.col__mds-basic.log 2>&1 < /dev/null
+END grid3×23.col mds-basic [Tue Dec 23 22:51:00 2025]
+
+BEGIN grid3×23.col mis-basic [Tue Dec 23 22:51:00 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×23.col  > result_row-3/log/grid3×23.col__mis-basic.log 2>&1 < /dev/null
+END grid3×23.col mis-basic [Tue Dec 23 23:21:00 2025]
+
+BEGIN grid3×23.col mds-trans [Tue Dec 23 23:21:00 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×23.col  > result_row-3/log/grid3×23.col__mds-trans.log 2>&1 < /dev/null
+END grid3×23.col mds-trans [Tue Dec 23 23:39:04 2025]
+
+BEGIN grid3×24.col mis-trans [Tue Dec 23 23:39:04 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×24.col  > result_row-3/log/grid3×24.col__mis-trans.log 2>&1 < /dev/null
+END grid3×24.col mis-trans [Wed Dec 24 00:09:04 2025]
+
+BEGIN grid3×24.col mds-basic [Wed Dec 24 00:09:04 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×24.col  > result_row-3/log/grid3×24.col__mds-basic.log 2>&1 < /dev/null
+END grid3×24.col mds-basic [Wed Dec 24 00:39:04 2025]
+
+BEGIN grid3×24.col mis-basic [Wed Dec 24 00:39:04 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×24.col  > result_row-3/log/grid3×24.col__mis-basic.log 2>&1 < /dev/null
+END grid3×24.col mis-basic [Wed Dec 24 01:09:04 2025]
+
+BEGIN grid3×24.col mds-trans [Wed Dec 24 01:09:04 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×24.col  > result_row-3/log/grid3×24.col__mds-trans.log 2>&1 < /dev/null
+END grid3×24.col mds-trans [Wed Dec 24 01:27:16 2025]
+
+BEGIN grid3×25.col mis-trans [Wed Dec 24 01:27:16 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×25.col  > result_row-3/log/grid3×25.col__mis-trans.log 2>&1 < /dev/null
+END grid3×25.col mis-trans [Wed Dec 24 01:57:16 2025]
+
+BEGIN grid3×25.col mds-basic [Wed Dec 24 01:57:16 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×25.col  > result_row-3/log/grid3×25.col__mds-basic.log 2>&1 < /dev/null
+END grid3×25.col mds-basic [Wed Dec 24 02:27:16 2025]
+
+BEGIN grid3×25.col mis-basic [Wed Dec 24 02:27:16 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×25.col  > result_row-3/log/grid3×25.col__mis-basic.log 2>&1 < /dev/null
+END grid3×25.col mis-basic [Wed Dec 24 02:57:16 2025]
+
+BEGIN grid3×25.col mds-trans [Wed Dec 24 02:57:16 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×25.col  > result_row-3/log/grid3×25.col__mds-trans.log 2>&1 < /dev/null
+END grid3×25.col mds-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×3.col mis-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×3.col  > result_row-3/log/grid3×3.col__mis-trans.log 2>&1 < /dev/null
+END grid3×3.col mis-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×3.col mds-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×3.col  > result_row-3/log/grid3×3.col__mds-basic.log 2>&1 < /dev/null
+END grid3×3.col mds-basic [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×3.col mis-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×3.col  > result_row-3/log/grid3×3.col__mis-basic.log 2>&1 < /dev/null
+END grid3×3.col mis-basic [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×3.col mds-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×3.col  > result_row-3/log/grid3×3.col__mds-trans.log 2>&1 < /dev/null
+END grid3×3.col mds-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×4.col mis-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×4.col  > result_row-3/log/grid3×4.col__mis-trans.log 2>&1 < /dev/null
+END grid3×4.col mis-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×4.col mds-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×4.col  > result_row-3/log/grid3×4.col__mds-basic.log 2>&1 < /dev/null
+END grid3×4.col mds-basic [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×4.col mis-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×4.col  > result_row-3/log/grid3×4.col__mis-basic.log 2>&1 < /dev/null
+END grid3×4.col mis-basic [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×4.col mds-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×4.col  > result_row-3/log/grid3×4.col__mds-trans.log 2>&1 < /dev/null
+END grid3×4.col mds-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×5.col mis-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×5.col  > result_row-3/log/grid3×5.col__mis-trans.log 2>&1 < /dev/null
+END grid3×5.col mis-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×5.col mds-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×5.col  > result_row-3/log/grid3×5.col__mds-basic.log 2>&1 < /dev/null
+END grid3×5.col mds-basic [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×5.col mis-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×5.col  > result_row-3/log/grid3×5.col__mis-basic.log 2>&1 < /dev/null
+END grid3×5.col mis-basic [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×5.col mds-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×5.col  > result_row-3/log/grid3×5.col__mds-trans.log 2>&1 < /dev/null
+END grid3×5.col mds-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×6.col mis-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×6.col  > result_row-3/log/grid3×6.col__mis-trans.log 2>&1 < /dev/null
+END grid3×6.col mis-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×6.col mds-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×6.col  > result_row-3/log/grid3×6.col__mds-basic.log 2>&1 < /dev/null
+END grid3×6.col mds-basic [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×6.col mis-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×6.col  > result_row-3/log/grid3×6.col__mis-basic.log 2>&1 < /dev/null
+END grid3×6.col mis-basic [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×6.col mds-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×6.col  > result_row-3/log/grid3×6.col__mds-trans.log 2>&1 < /dev/null
+END grid3×6.col mds-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×7.col mis-trans [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×7.col  > result_row-3/log/grid3×7.col__mis-trans.log 2>&1 < /dev/null
+END grid3×7.col mis-trans [Wed Dec 24 03:15:38 2025]
+
+BEGIN grid3×7.col mds-basic [Wed Dec 24 03:15:38 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×7.col  > result_row-3/log/grid3×7.col__mds-basic.log 2>&1 < /dev/null
+END grid3×7.col mds-basic [Wed Dec 24 03:15:40 2025]
+
+BEGIN grid3×7.col mis-basic [Wed Dec 24 03:15:40 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×7.col  > result_row-3/log/grid3×7.col__mis-basic.log 2>&1 < /dev/null
+END grid3×7.col mis-basic [Wed Dec 24 03:15:40 2025]
+
+BEGIN grid3×7.col mds-trans [Wed Dec 24 03:15:40 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×7.col  > result_row-3/log/grid3×7.col__mds-trans.log 2>&1 < /dev/null
+END grid3×7.col mds-trans [Wed Dec 24 03:15:42 2025]
+
+BEGIN grid3×8.col mis-trans [Wed Dec 24 03:15:42 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×8.col  > result_row-3/log/grid3×8.col__mis-trans.log 2>&1 < /dev/null
+END grid3×8.col mis-trans [Wed Dec 24 03:15:42 2025]
+
+BEGIN grid3×8.col mds-basic [Wed Dec 24 03:15:42 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×8.col  > result_row-3/log/grid3×8.col__mds-basic.log 2>&1 < /dev/null
+END grid3×8.col mds-basic [Wed Dec 24 03:16:09 2025]
+
+BEGIN grid3×8.col mis-basic [Wed Dec 24 03:16:09 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×8.col  > result_row-3/log/grid3×8.col__mis-basic.log 2>&1 < /dev/null
+END grid3×8.col mis-basic [Wed Dec 24 03:16:09 2025]
+
+BEGIN grid3×8.col mds-trans [Wed Dec 24 03:16:09 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×8.col  > result_row-3/log/grid3×8.col__mds-trans.log 2>&1 < /dev/null
+END grid3×8.col mds-trans [Wed Dec 24 03:16:42 2025]
+
+BEGIN grid3×9.col mis-trans [Wed Dec 24 03:16:42 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark_row-3/grid3×9.col  > result_row-3/log/grid3×9.col__mis-trans.log 2>&1 < /dev/null
+END grid3×9.col mis-trans [Wed Dec 24 03:16:42 2025]
+
+BEGIN grid3×9.col mds-basic [Wed Dec 24 03:16:42 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark_row-3/grid3×9.col  > result_row-3/log/grid3×9.col__mds-basic.log 2>&1 < /dev/null
+END grid3×9.col mds-basic [Wed Dec 24 03:19:46 2025]
+
+BEGIN grid3×9.col mis-basic [Wed Dec 24 03:19:46 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark_row-3/grid3×9.col  > result_row-3/log/grid3×9.col__mis-basic.log 2>&1 < /dev/null
+END grid3×9.col mis-basic [Wed Dec 24 03:19:46 2025]
+
+BEGIN grid3×9.col mds-trans [Wed Dec 24 03:19:46 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark_row-3/grid3×9.col  > result_row-3/log/grid3×9.col__mds-trans.log 2>&1 < /dev/null
+END grid3×9.col mds-trans [Wed Dec 24 03:31:49 2025]
+
+FINISH solving problems in csv/BENCH_row-3.csv
+See result_row-3

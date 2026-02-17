@@ -1,0 +1,65 @@
+#!/usr/bin/env python3
+import sys
+from typing import List, Tuple
+
+def generate_grid_edges(rows: int, cols: int) -> Tuple[int, List[Tuple[int, int]]]:
+    """
+    rows x cols の格子グラフを生成する（頂点は1始まり、行優先の連番）。
+    辺は「右」と「下」への隣接のみ追加（無向辺なので重複なし）。
+    """
+    if rows <= 0 or cols <= 0:
+        raise ValueError("rows と cols は正の整数である必要があります。")
+
+    n_vertices = rows * cols
+    edges: List[Tuple[int, int]] = []
+
+    for r in range(rows):
+        for c in range(cols):
+            v = r * cols + c + 1  # 1-indexed
+            # 右隣
+            if c + 1 < cols:
+                edges.append((v, v + 1))
+            # 下隣
+            if r + 1 < rows:
+                edges.append((v, v + cols))
+
+    return n_vertices, edges
+
+def main() -> int:
+    # 入力：引数があれば引数優先、なければ stdin から2整数
+    if len(sys.argv) >= 3:
+        try:
+            rows = int(sys.argv[1])
+            cols = int(sys.argv[2])
+        except ValueError:
+            print("Usage: grid2dimacs.py <rows> <cols>", file=sys.stderr)
+            return 2
+    else:
+        data = sys.stdin.read().strip().split()
+        if len(data) < 2:
+            print("stdin から rows cols の2整数を入力してください。", file=sys.stderr)
+            return 2
+        try:
+            rows = int(data[0])
+            cols = int(data[1])
+        except ValueError:
+            print("rows cols は整数で入力してください。", file=sys.stderr)
+            return 2
+
+    try:
+        n_vertices, edges = generate_grid_edges(rows, cols)
+    except ValueError as e:
+        print(str(e), file=sys.stderr)
+        return 2
+
+    # DIMACS .col 形式で出力
+    # （コメント行 c は任意。必要なければ消してOK）
+    print(f"c Grid graph {rows}x{cols}")
+    print(f"p edge {n_vertices} {len(edges)}")
+    for u, v in edges:
+        print(f"e {u} {v}")
+
+    return 0
+
+if __name__ == "__main__":
+    raise SystemExit(main())

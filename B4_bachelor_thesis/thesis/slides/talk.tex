@@ -1,0 +1,750 @@
+\documentclass[uplatex,compress,xcolor=table,dvipdfmx]{beamer}
+
+\usepackage{soh-beamer}
+\usepackage{extarrows}
+\usepackage{appendixnumberbeamer}
+\usepackage{ragged2e}
+\usepackage{multirow}
+\usepackage{tikz}
+\usepackage{nccmath}
+\usepackage{float}
+\usepackage{here}
+\usepackage{mathtools}
+\usepackage{cancel}
+\makeatletter
+\let\listofalgorithms\relax
+\makeatother
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{adjustbox}
+\usepackage{array}
+
+
+\renewcommand{\CancelColor}{\color{red}}
+
+\renewcommand{\kanjifamilydefault}{\gtdefault}
+
+\newcommand{\ts}[1]{{\color{red} #1}}
+\newcommand{\dlb}[1]{{\color{orange} #1}}
+\newcommand{\mm}[1]{{\color{blue} #1}}
+\newcommand{\mi}[1]{\mathit{#1}}
+% \newtheorem{definition}{Definition}
+
+\makeatletter
+\newcommand{\srcsize}{\@setfontsize{\srcsize}{2pt}{2pt}}
+\makeatother
+
+\usepackage{xcolor}
+
+\input{macros/macros}
+\input{macros/macros-ph.tex}
+\input{macros/macros-abstr}
+\input{macros/tikzstyles2.tex}
+\input{style.tex}
+\definecolor{cerise}{rgb}{0.87, 0.19, 0.39}
+\definecolor{dartmouthgreen}{rgb}{0.05, 0.5, 0.06}
+\definecolor{cerulean}{rgb}{0.0, 0.48, 0.65}
+\definecolor{denim}{rgb}{0.08, 0.38, 0.74}
+\definecolor{liver}{rgb}{0.33, 0.29, 0.31}
+\definecolor{mauvetaupe}{rgb}{0.57, 0.37, 0.43}
+\definecolor{persianindigo}{rgb}{0.2, 0.07, 0.48}
+\definecolor{regalia}{rgb}{0.32, 0.18, 0.5}
+\definecolor{purpleheart}{rgb}{0.41, 0.21, 0.61}
+\definecolor{persiangreen}{rgb}{0.0, 0.65, 0.58}
+
+\newcommand{\hilight}[1]{\textcolor{cerulean}{#1}}
+\newcommand{\Bhilight}[1]{\textcolor{cerulean}{\textbf{#1}}}
+\newcommand{\new}[1]{\textcolor{blue}{#1}}
+\newcommand{\red}[1]{\textcolor{red}{#1}}
+\newcommand{\cerise}[1]{\textcolor{cerise}{#1}}
+\newcommand{\blue}[1]{\textcolor{blue}{#1}}
+\newcommand{\green}[1]{\textcolor{dartmouthgreen}{#1}}
+\newcommand{\gris}[1]{{\textcolor{gray}{#1}}}
+\newcommand{\mauvetaupe}[1]{\textit{{\textcolor{mauvetaupe}{#1}}}}
+\newcommand{\cean}[1]{{\textcolor{cerulean}{#1}}}
+\newcommand{\yellow}[1]{{\textcolor{GreenYellow}{#1}}}
+%\newcommand{\Blue}[1]{\textcolor[dvipsnames]{Blue}{#1}}
+
+\newcommand{\redunderline}[1]{\textcolor{red}{\underline{\textcolor{black}{#1}}}}
+
+
+\newcommand{\saf}{\textsf{SAF}}
+\newcommand{\sfj}{\textsf{Sat4j}}
+\newcommand{\biolqm}{\textsf{BioLQM}}
+\newcommand{\cadical}{\textsf{CaDiCaL}}
+\newcommand{\sstd}{\textsf{SharpSAT-TD}}
+\newcommand{\bddminisat}{\textsf{BDD\_MINISAT\_ALL}}
+\newcommand{\bsim}{\textsf{Boolsim}}
+\newcommand{\cabean}{\textsf{Cabean}}
+\newcommand{\pyb}{\textsf{PyBoolNet}}
+\newcommand{\pybshort}{\textsf{PyB.}}
+\newcommand{\pys}{\textsf{Pystablemotifs}}
+\newcommand{\aeon}{\textsf{AEON}}
+\newcommand{\fasps}{\textsf{fASP-s}}
+\newcommand{\faspc}{\textsf{fASP-c}}
+\newcommand{\faspfull}{\textsf{fASP}}
+\newcommand{\pint}{\textsf{Pint}}
+\newcommand{\anasp}{\textsf{AN-ASP}}
+\newcommand{\todo}[1]{\textcolor{red}{(TODO) #1.}}
+\newcommand{\takehide}[1]{\textcolor{blue}{#1}}
+\newcommand{\vect}[1]{% この中身は自分の好きなベクトルの表記に置き換える
+\overset{\scriptscriptstyle \boldsymbol{\to}}{\boldsymbol {#1}}    % amsmath が必要
+}
+
+\newcommand{\bbm}{\textsf{BBM}}
+\newcommand{\prand}{\textsf{P-Random}}
+\newcommand{\selected}{\textsf{Selected}}
+
+\newcommand{\dc}{\textsf{D.C.}}
+\newcommand{\ic}{\textsf{I.C.}}
+\newcommand{\hc}{\textsf{H.C.}}
+\newcommand{\he}{\textsf{H.E.}}
+
+\newcommand{\ttsat}{\texttt{SAT}}
+\newcommand{\ttunsat}{\texttt{UNSAT}}
+
+
+\usetheme{default}
+
+\author{102230349 前田 悠士朗}
+
+\date{2025年度卒業研究発表会\\ 2026年2月20日}
+\institute{番原・宋研究室}
+\title{SAT 符号化を用いた命題論理式の極小・極大モデル計算の実装と評価}
+\begin{document}
+
+\thispagestyle{empty}
+\maketitle
+\addtocounter{framenumber}{-1}
+
+\section{Main}
+\begin{frame}{命題論理式のモデル}
+ \begin{itemize}
+        \item 命題論理式の充足可能性判定問題をSAT問題といい，通常CNFという形式で記述される.
+	\item CNFの解(モデル)が持つ良い性質の例として，\st{極小性}，\st{極大性}があり，それらを満たすモデルを\st{極小モデル}，\st{極大モデル}と呼ぶ.
+ \end{itemize}
+ \begin{block}{}
+  \begin{itemize}
+   \item \structure{極小モデル:} 命題論理式$\Phi$のモデル$M$について，$M'\subset M$かつ$M'$も$\Phi$のモデル，という$M'$が存在しないもの.
+   \item \structure{極大モデル:} 命題論理式$\Phi$のモデル$M$について，$M\subset M''$かつ$M''$も$\Phi$のモデル，という$M''$が存在しないもの.
+  \end{itemize}
+ \end{block}
+ \begin{itemize}
+   \item 極小・極大モデルの応用例
+ \begin{itemize}
+  \item 多目的最適化ナップサック問題を順序符号化し，極小・極大モデルを列挙することで，パレートフロントを求めることができる.
+  \item 整数ナップサック問題を多値符号化し，極大モデルを列挙することで，圧縮解を求めることができる.
+ \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{先行研究}
+ \begin{block}{}
+  [Koshimura+,'09]では，SATソルバーを複数回起動し，1つの極小モデルを求める方法が提案された.
+ \end{block}
+ ここでSAT 問題を符号化したP が与えられたとき，極小モデルは以下の手順で求めることができる.
+ \begin{enumerate}
+   \item $P$にSATソルバーを起動し，モデルMを求める
+   \item 1.で求めたモデルMのうち，真として含まれるリテラルを$x_1,...,x_m$とし，偽として含まれるリテラルを$y_1,...,y_n$とし，次のF1,F2を作る
+   \begin{center}
+    F1$~=~\neg (x_1 \land ... \land x_m)$\\
+    F2$~=~\neg y_1 \land ... \land \neg y_n$
+   \end{center}
+\vspace{0.15cm}
+  % \item 1.で求めたモデルMのうち，真や偽として含まれるリテラルに注目し，次に探すモデルを今のモデル M とは必ず異なるかつより小さくするための制約を$P$に追加し，$P'$とする.
+  \item $P \coloneq  P \land F1 \land F2$として，SATソルバーを起動する
+    \begin{itemize}
+     \item UNSATならば，モデルMが極小モデル
+     \item SATならば，1.に戻る
+    \end{itemize}
+  \end{enumerate}
+    \begin{alertblock}{}
+	    この方法ではの方法ではSATソルバーの起動回数が増加し，計算コストが大きくなるという課題がある.
+    \end{alertblock}
+\end{frame}
+
+\begin{frame}{研究概要}
+   \begin{alertblock}{}
+    \begin{center}
+      SAT符号化を用いた極小・極大モデルを効率的に計算するシステムの実現
+    \end{center}
+   \end{alertblock}
+   \begin{itemize}
+    \item ~[足立,'23]ではCNFに変換を施し，SATソルバー1回起動で，1つの極小モデルを計算する方法が提案されたが，極大モデルを計算する方法の提案や実装，評価はされていなかった.
+   \end{itemize}
+   \begin{block}{研究内容}
+    \begin{enumerate}
+     \item \ts{極大モデル計算のためのCNF変換の提案}
+     \begin{itemize}
+      \item 変換後のCNF のモデルの集合が，変換前のCNF の極大モデルの集合と一致するような変換.
+     \end{itemize}
+     \item CNF変換による極小・極大モデル計算の実装
+     \begin{itemize}
+      \item SATソルバー1回起動につき，1つの極小・極大モデルを計算する
+     \end{itemize}
+     \item \ts{CNF変換による極小・極大モデル計算のグラフ問題を用いた実験}
+    \end{enumerate}
+   \end{block}
+\end{frame}
+
+\begin{frame}{提案変換}
+ \begin{alertblock}{アイデア}
+  ある変数が負リテラルとして含まれる全ての節において，節中の他の変数で節が満たされている場合，その変数を真にすることで，\ts{できるだけ多くの変数を真にする}.
+ \end{alertblock}
+ \begin{exampleblock}{}
+  与えられたCNFを$\Phi $，変換後のCNFを$\Omega $ とすると，提案変換は，$\Phi$に以下のような制約$M(\Phi )$ を追加し，$\Omega = \Phi \land M(\Phi )$ とするものである.
+  \begin{center}
+      {\fontsize{13pt}{15pt}\selectfont $M(\Phi )~=~\bigwedge\limits_{p\in Var(\Phi )}~Cl(\Phi ,\neg p)~\to ~p$\\
+      $Cl(\Phi ,\neg p)~\equiv ~\bigwedge\limits_{c\in \Phi ,\neg p\in c}~c\backslash \{ \neg p\}$\\}
+  \end{center}
+ \end{exampleblock}
+
+    \begin{itemize}
+     \item $Cl(\Phi ,\neg p)$: $\neg p$ を含む全ての節が，$\neg p$ 以外のリテラルで満たされている状態．
+     \item $M(\Phi )$: $Cl(\Phi ,\neg p)$が真ならば，$p$ を真にする制約．
+    \end{itemize}
+
+\end{frame}
+
+
+\begin{frame}{提案変換の説明(例)}
+\only<1,2>{
+\begin{itemize}
+ \item 次のグラフ上の極大独立集合問題を考える.
+ \item 独立集合条件：隣接する2頂点を同時に選ばない.
+\end{itemize} 
+\centering
+\vspace{0.3cm}
+        \begin{tikzpicture}[scale=0.8, auto, swap]
+            \node[draw, circle, inner sep=2pt] (p) at (0,1.5) {$p$};
+            \node[draw, circle, inner sep=2pt] (q) at (0,0) {$q$};
+            \node[draw, circle, inner sep=2pt] (r) at (1.5,0.75) {$r$};
+            \node[draw, circle, inner sep=2pt] (s) at (3,0.75) {$s$};
+        
+            \draw (p) -- (q);
+            \draw (q) -- (r);
+            \draw (r) -- (p);
+            \draw (r) -- (s);
+        \end{tikzpicture}
+\vspace{-0.35cm}
+}
+
+\only<3>{
+\centering
+\vspace{0.3cm}
+        \colorlet{pcol}{white} \colorlet{qcol}{white} \colorlet{rcol}{white} \colorlet{scol}{white}
+        \only<3>{ \colorlet{pcol}{red!30} \colorlet{qcol}{green!30} \colorlet{rcol}{green!30} }
+        % \only<3>{ \colorlet{pcol}{green!30} \colorlet{qcol}{red!30} \colorlet{rcol}{green!30} }
+        % \only<4>{ \colorlet{pcol}{green!30} \colorlet{qcol}{green!30} \colorlet{rcol}{red!30} \colorlet{scol}{green!30} }
+        % \only<5>{ \colorlet{rcol}{green!30} \colorlet{scol}{red!30} }
+        \begin{tikzpicture}[scale=0.8, auto, swap]
+            \node[draw, circle, inner sep=2pt, fill=pcol] (p) at (0,1.5) {$p$};
+            \node[draw, circle, inner sep=2pt, fill=qcol] (q) at (0,0) {$q$};
+            \node[draw, circle, inner sep=2pt, fill=rcol] (r) at (1.5,0.75) {$r$};
+            \node[draw, circle, inner sep=2pt, fill=scol] (s) at (3,0.75) {$s$};
+        
+            \draw (p) -- (q);
+            \draw (q) -- (r);
+            \draw (r) -- (p);
+            \draw (r) -- (s);
+        \end{tikzpicture}
+\vspace{-0.35cm}
+}
+
+    \begin{columns}[t]
+      \begin{column}{0.48\textwidth}
+        \begin{block}{CNF $\Phi$ (独立集合条件)}
+	 \begin{center}
+	  $\neg {\textcolor<3>{red}p}\lor \neg {q}$\\
+	  $\neg {q} \lor \neg {r}$\\
+	  $\neg {r} \lor \neg {\textcolor<3>{red}p}$\\
+	  $\neg {r} \lor \neg {s}$	  
+	 \end{center}
+	\end{block}
+      \end{column}
+      \begin{column}{0.48\textwidth}
+        \begin{block}{追加する節集合$M(\Phi )$}
+	 \begin{center}
+          \onslide<2->{
+	  {\small $(\neg q \land \neg r) \to {\textcolor<3>{red}p}$}}\\
+          \onslide<2->{
+	  {\small $(\neg p \land \neg r) \to {q}$}}\\
+          \onslide<2->{
+	  {\small $(\neg p \land \neg q \land \neg s) \to {r}$}}\\
+          \onslide<2->{
+	  {\small $\neg r \to {s}$}}
+	 \end{center}
+	\end{block}
+      \end{column}
+    \end{columns}
+
+ \only<1>{
+  \vspace{0.2cm}
+    \begin{itemize}
+     \item $\Phi $のモデルは以下の7つ ($1$:選択, $0$:非選択)
+    \end{itemize}
+    \small
+    \begin{center}
+     $(p,q,r,s)~=~(0,0,0,0),(0,0,0,1),(0,0,1,0),(0,1,0,0),$
+    \end{center}
+    \vspace{-0.05cm}
+    \begin{center}
+     $(0,1,0,1),(1,0,0,0),(1,0,0,1)$
+    \end{center}
+ }
+
+ \only<3>{
+  \vspace{0.2cm}
+  \begin{itemize}
+   \item 変数$p$は第1, 3節に負リテラルとして含まれる.
+   \item 隣接頂点$q, r$が選ばれていない($q=r=0$)なら，$p=1$.
+  \end{itemize}
+    \small
+    \begin{center}
+     $(p,q,r,s)~=~\cancel{(0,0,0,0)},\cancel{(0,0,0,1)},(0,0,1,0),(0,1,0,0),$
+    \end{center}
+    \begin{center}
+     $(0,1,0,1),(1,0,0,0),(1,0,0,1)$
+    \end{center}
+ }
+
+%  \only<3>{
+%   \vspace{0.2cm}
+%   \begin{itemize}
+%    \item 変数$q$は第1, 2節に負リテラルとして含まれる.
+%    \item 隣接頂点$p, r$が選ばれていない($p=r=0$)なら，$q=1$.
+%   \end{itemize}
+%     \small
+%     \begin{center}
+%      $(p,q,r,s)~=~\blue{\cancel{(0,0,0,0)}},\blue{\cancel{(0,0,0,1)}},(0,0,1,0),(0,1,0,0),$
+%     \end{center}
+%     \begin{center}
+%      $(0,1,0,1),(1,0,0,0),(1,0,0,1)$
+%     \end{center}
+%  }
+
+%  \only<4>{
+%   \vspace{0.2cm}
+%   \begin{itemize}
+%    \item 変数$r$は第2, 3, 4節に負リテラルとして含まれる.
+%    \item 隣接頂点$p, q, s$が選ばれていない($p=q=s=0$)なら，$r=1$.
+%   \end{itemize}
+%     \small
+%     \begin{center}
+%      $(p,q,r,s)~=~\blue{\cancel{(0,0,0,0)}},\blue{(0,0,0,1)},(0,0,1,0),(0,1,0,0),$
+%     \end{center}
+%     \begin{center}
+%      $(0,1,0,1),(1,0,0,0),(1,0,0,1)$
+%     \end{center}
+%  }
+
+%  \only<5>{
+%   \vspace{0.2cm}
+%   \begin{itemize}
+%    \item 変数$s$は第4節のみに負リテラルとして含まれる.
+%    \item 隣接頂点$r$が選ばれていない($r=0$)なら，$s=1$.
+%   \end{itemize}
+%     \small
+%     \begin{center}
+%      $(p,q,r,s)~=~\blue{\cancel{(0,0,0,0)}},\blue{(0,0,0,1)},(0,0,1,0),\cancel{(0,1,0,0)},$
+%     \end{center}
+%     \begin{center}
+%      $(0,1,0,1),\cancel{(1,0,0,0)},(1,0,0,1)$
+%     \end{center}
+%  }
+ \only<2>{
+  \vspace{0.2cm}
+    \begin{itemize}
+     \item 最終的に残ったモデル(極大独立集合)
+    \end{itemize}
+    \small
+    \begin{center}
+     $(p,q,r,s)~=~\underbrace{(0,0,1,0)}_{\{r\}},\underbrace{(0,1,0,1)}_{\{q,s\}},\underbrace{(1,0,0,1)}_{\{p,s\}}$
+    \end{center}
+  }
+\end{frame}
+
+\begin{frame}{実験概要}
+ \begin{block}{}
+  既存研究[足立，'23] の変換と本研究の提案変換を評価するために実験を行った.
+ \end{block}
+ \begin{itemize}
+  \item 比較対象
+   \begin{itemize}
+    \item  ~[Koshimura+,'09]の極小・極大モデル計算法（既存手法）
+    \item  ~[足立，'23]の極小，本研究の極大モデル計算法（提案手法）
+   \end{itemize}
+  \item ベンチマーク：$3$ 行$n$ 列$(n = 1,2,...,19)$のGrid graph の全19問
+    \begin{itemize}
+     \item 極小モデル：極小支配集合問題の全解列挙
+     \item 極大モデル：極大独立集合問題の全解列挙
+    \end{itemize}
+  \item 制限時間：1 問あたり30 分
+  \item 使用ソルバー：$CaDiCaL~~3.0.0$
+  \item 使用言語：$Rust$
+  \item 実験環境：Mac mini Apple M4，32GBメモリ
+ \end{itemize}
+\end{frame}
+
+
+\begin{frame}{実験結果（カクタスプロット）}
+
+\begin{columns}[T,onlytextwidth]
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/mds-plot}
+
+  \column{0.5\textwidth}
+  \centering
+  \includegraphics[width=\linewidth]{images/mis-plot}
+\end{columns}
+
+\begin{itemize}
+  \item 極小モデル計算は2問多く，極大モデル計算は5問多く制限時間内に解くことができた.
+  \item 解くことができた全ての問題において，既存手法より提案手法の方が速く解くことができた.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{両手法におけるSATソルバー起動回数}
+\centering
+
+\begin{minipage}[t][0.75\textheight][t]{\textwidth}
+\centering
+\tiny
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{adjustbox}{max width=\textwidth, max totalheight=1.00\textheight, keepaspectratio}
+  \input{table/c-solver}
+\end{adjustbox}
+\end{minipage}
+
+\vspace{-0.3cm}
+
+\begin{minipage}[t][0.30\textheight][t]{\textwidth}
+  \normalsize
+\begin{itemize}
+  \item SATソルバー起動回数が3〜4分の1程度になった.
+  \item SATソルバー起動に伴うオーバーヘッドの削減でCPU 時間の短縮に寄与したと考えられる.
+\end{itemize}
+\end{minipage}
+
+\end{frame}
+
+\begin{frame}{まとめ}
+   \begin{alertblock}{}
+      \begin{center}
+        提案変換の方法について説明し，実装，評価した.
+      \end{center}
+   \end{alertblock}
+    \begin{enumerate}
+     \item [1]効率的に極大モデルが求まるCNFへの変換方法を考案
+     \item [2]CNF 変換による極小・極大モデル計算の実装
+     \item [3]CNF 変換による極小・極大モデル計算のグラフ問題を用いた実験
+    \end{enumerate}
+  \begin{exampleblock}{今後の課題}
+   \begin{itemize}
+    \item グラフ問題以外への応用の検証
+    \item 変換自体の効率化
+    \item 全解列挙に対応したSATソルバーの使用
+   \end{itemize}
+  \end{exampleblock}
+\end{frame}
+
+% -----------------------------
+% 参考文献
+\begin{frame}[allowframebreaks]{References}
+  \scriptsize
+  \beamertemplatetextbibitems   % 参考文献アイコンを「文」っぽいものに
+  \bibliographystyle{unsrt}     % junsrt が使えるなら戻してOK
+  \nocite{*}                    % ← 全件出したいなら追加
+  \bibliography{ref}            % ref.bib
+\end{frame}
+
+
+% -----------------------------
+% 補足資料
+\appendix
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}{}
+    \vspace{3em}
+    \centering
+    \LARGE{補助スライド}
+\end{frame}
+
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}{SATとCNF}
+ \begin{block}{SAT(充足可能判定問題)}
+  \begin{itemize}
+   \item 与えられた命題論理式を充足する値割り当てが存在するかどうかを判定する問題.
+   \item 命題論理式を充足する割り当てが存在するとき，充足可能(SAT)であるといい，存在しないとき充足不能(UNSAT)であるという.
+   \item 一般的にはCNF(連言標準形)で記述する.
+  \end{itemize}
+ \end{block}
+ \begin{block}{CNF}
+  \begin{itemize}
+   \item \structure{CNF}は，節の論理積(連言) である.
+   \item \structure{節}(clause)は，リテラルの論理和(選言) である.
+   \item \structure{リテラル}(literal)は，命題変数，もしくはその否定である.
+  \end{itemize}
+ \begin{exampleblock}{例}
+  $A,B,C$を命題変数としたとき，\\
+  $(\neg A\lor B)\land (A\lor C)\land (\neg B \lor \neg C)$
+ \end{exampleblock}
+ \end{block}
+\end{frame}
+
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}{先行研究の詳細}
+ \begin{block}{SATソルバーの複数回起動による極小モデルを求める方法\cite{Koshimura2009minimal} }
+  \begin{enumerate}
+   \item CNFのモデルを一つ求める.
+   \item そのモデルで偽となる変数について，その変数が偽であるという単位節をCNFに追加し，それ以外の変数についてそれらの変数のいずれかが偽となるという制約をCNFに追加する.
+   \item 2 で生成したCNFがUNSATであれば，1 で求めたモデルを極小モデルとして出力する.SATであれば，2 の操作を繰り返す.
+  \end{enumerate}
+ \end{block}
+ \begin{block}{SATソルバーの1回起動による極小モデルを求める方法\cite{adachi2024}}
+  \begin{itemize}
+   \item 与えられたCNFを$\Phi $，変換後のCNFを$\Omega $ とすると，提案変換は，$\Phi$に以下のような制約$M(\Phi )$ を追加し，$\Omega = \Phi \land M(\Phi )$ とするものである.
+  \end{itemize}
+  \begin{center}
+   {\fontsize{10pt}{8pt}\selectfont $M(\Phi )~=~\bigwedge\limits_{p\in Var(\Phi )}~p~\to~ \neg Cl(\Phi ,p)$\\
+   $Cl(\Phi ,p)~\equiv ~\bigwedge\limits_{c\in \Phi ,p\in c}~c\backslash \{ p\}$\\}
+  \end{center}
+ \end{block}
+\end{frame}
+
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}{提案変換が有効に働く問題の例}
+ \begin{block}{CNFの例}
+  \vspace{0.2cm}
+  \begin{center}
+   $\bigg( \bigwedge\limits_i C^+_i\bigg) \land \bigg( \bigwedge\limits_i C^-_j \bigg)$
+  \end{center}
+  \begin{itemize}
+   \item ここで，$C^+_i$は正リテラルのみを含む節で，$C^-_j$は負リテラルのみを含む節である.
+  \end{itemize}
+ \end{block}
+ \begin{block}{応用例}
+  \begin{itemize}
+   \item 整数ナップサック問題を符号化したCNF
+	 \begin{itemize}
+	  \item 順序符号化し，提案方法で極大モデルを列挙することで，多重ナップサック問題のパレートフロントが求まる.
+	  \item 多値符号化し，提案方法で極大モデルを列挙することで，圧縮解を求めることができる
+	 \end{itemize}
+  \end{itemize}
+ \end{block}
+\end{frame}
+
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}[fragile,shrink=12]{提案変換のアルゴリズム} 
+ \input{code/algo} 
+\end{frame}
+
+\begin{frame}{3×4 Grid graph における MIS と MDS の例}
+
+\small
+
+図6.1に $3\times4$ の Grid graph における極小支配集合（MDS）の例を，\\
+図6.2に $3\times4$ の Grid graph における極大独立集合（MIS）の例を示す.
+\begin{itemize}
+   \item 支配集合条件：任意の頂点は，選ばれた頂点そのものか，選ばれた頂点に隣接していなければならない.
+   \item 独立集合条件：隣接する2頂点を同時に選ばない.
+\end{itemize}
+
+\begin{columns}[T,onlytextwidth]
+
+  % ===== 左：MDS 図 =====
+  \begin{column}{0.48\textwidth}
+    \centering
+    \input{tikz/gridgraph-mds}
+
+    \vspace{0.3em}
+    \begin{tabular}{@{}l@{}}
+      \tikz\fill[yellow!70] (0,0) circle (0.12cm);~
+      {\footnotesize MDS の頂点（極小支配集合）}
+    \end{tabular}
+    
+    \vspace{0.5em}
+    {\footnotesize 図6.1：$3\times4$ Grid graph の MDS}
+
+  \end{column}
+
+  % ===== 右：MIS 図 =====
+  \begin{column}{0.48\textwidth}
+    \centering
+    \input{tikz/gridgraph-mis}
+
+    \vspace{0.3em}
+    \begin{tabular}{@{}l@{}}
+      \tikz\fill[green!60] (0,0) circle (0.12cm);~
+      {\footnotesize MIS の頂点（極大独立集合）}
+    \end{tabular}
+
+
+    \vspace{0.5em}
+    {\footnotesize 図6.2：$3\times4$ Grid graph の MIS}
+
+  \end{column}
+
+\end{columns}
+
+\end{frame}
+
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}{実験結果（実行時間と結果数）}
+
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\renewcommand{\arraystretch}{0.9}
+
+\begin{columns}[T,onlytextwidth]
+  % 左：MDS
+  \begin{column}{0.49\textwidth}
+    \centering
+    \resizebox{\linewidth}{!}{%
+      \input{table/mds_result}%
+    }
+  \begin{itemize}
+   \item 全ての問題において早い時間で解けた.
+   \item MISでは5問多く解けた.
+  \end{itemize}
+  \end{column}
+
+  % 右：MIS
+  \begin{column}{0.49\textwidth}
+    \centering
+    \resizebox{\linewidth}{!}{%
+      \input{table/mis_result}%
+    }
+  \end{column}
+\end{columns}
+
+\end{frame}
+
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}{SAT ソルバー起動により要したCPU 時間}
+\centering
+
+\begin{minipage}[t][0.75\textheight][t]{\textwidth}
+\centering
+\tiny
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{adjustbox}{max width=\textwidth, max totalheight=1.00\textheight, keepaspectratio}
+  \includegraphics{images/model_discovery}
+\end{adjustbox}
+\end{minipage}
+
+\vspace{-0.5cm}
+
+\begin{minipage}[t][0.30\textheight][t]{\textwidth}
+  \normalsize
+\begin{itemize}
+  \item 既存手法では，頻繁なSAT ソルバーの起動がオーバーヘッドとなり，CPU 時間全体の増加を招いていることが分かる．
+  \item 提案手法ではソルバーの起動回数が大幅に抑制されているため，起動に伴うコストが低減され，効率的な計算が実現できている．
+\end{itemize}
+\end{minipage}
+
+\end{frame}
+
+
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}{既存手法と提案手法の計算したモデル数とCPU 時間}
+\centering
+
+\begin{minipage}[t][0.75\textheight][t]{\textwidth}
+\centering
+\tiny
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{adjustbox}{max width=\textwidth, max totalheight=1.00\textheight, keepaspectratio}
+  \includegraphics{images/model_times}
+\end{adjustbox}
+\end{minipage}
+
+\vspace{-0.5cm}
+
+\begin{minipage}[t][0.30\textheight][t]{\textwidth}
+  \normalsize
+\begin{itemize}
+  \item 既存手法と比較して，提案手法は各モデルを計算するのに要する時間がモデル数の増加に伴い短くなり，かつ安定して推移していることが読み取れる
+\end{itemize}
+\end{minipage}
+
+\end{frame}
+
+
+
+\thispagestyle{empty}
+\addtocounter{framenumber}{-1}
+\begin{frame}{両手法におけるCNFの変数数と節数}
+\centering
+
+\begin{minipage}[t][0.75\textheight][t]{\textwidth}
+\centering
+\tiny
+\setlength{\tabcolsep}{2pt}
+\renewcommand{\arraystretch}{1.2}
+
+\begin{adjustbox}{max width=\textwidth, max totalheight=1.00\textheight, keepaspectratio}
+  \input{table/mds-mis-cnf}
+\end{adjustbox}
+\end{minipage}
+
+\begin{minipage}[t][0.30\textheight][t]{\textwidth}
+  \normalsize
+\begin{itemize}
+  \item 極小モデル計算ではTseitin変換により，変数の数が増加した.
+  \item Tseitin変換によるCNFの複雑化のため，極大モデル計算の方が既存手法と提案手法の性能差が大きく現れていると考えられる.
+\end{itemize}
+\end{minipage}
+
+\end{frame}
+
+\end{document}
+
+% \begin{frame}{提案変換の説明}
+%  \begin{exampleblock}{}
+%   \begin{itemize}
+%    \item 与えられたCNFを$\Phi $，変換後のCNFを$\Omega $ とすると，提案変換は，$\Phi$に以下のような制約$M(\Phi )$ を追加し，$\Omega = \Phi \land M(\Phi )$ とするものである.
+%   \end{itemize}
+%   \begin{center}
+%       {\fontsize{13pt}{15pt}\selectfont $M(\Phi )~=~\bigwedge\limits_{p\in Var(\Phi )}~Cl(\Phi ,\neg p)~\to ~p$\\
+%       $Cl(\Phi ,\neg p)~\equiv ~\bigwedge\limits_{c\in \Phi ,\neg p\in c}~c\backslash \{ \neg p\}$\\}
+%   \end{center}
+%  \end{exampleblock}
+%  \only<1-3>{
+%   \begin{itemize}
+%    \item $Cl(\Phi ,\neg p)$は，変数$p$が負リテラルとして含まれている全ての節から$\neg p$を除いたものの連言である.
+%    \item 例：$\Phi ~=~ (p\lor q\lor r)\land (\neg {\textcolor<2>{red}p} \lor q)\land (\neg {\textcolor<3>{red}p} \lor \neg q \lor r)$の場合，
+% \vspace{0.2cm}
+%    \begin{center}
+%     $Cl(\Phi ,\neg p)~=~$\pause${\textcolor<2>{blue}q}~\land~$\pause$(\neg {\textcolor<3>{blue}q} \lor {\textcolor<3>{blue}r})$
+%    \end{center}
+%   \end{itemize}
+%   }
+%   \only<4>{
+%    \begin{itemize}
+%     \item $M(\Phi )$は，全ての変数$p$において，$Cl(\Phi ,\neg p)$満たされれば，$p$を真とするという制約の連言である.
+%     \item 例：$\Phi ~=~ (p\lor q\lor r)\land (\neg p \lor q)\land (\neg p \lor \neg q \lor r)$の場合，
+%      \begin{center}
+%       $Cl(\Phi , \neg p)~=~q \land (\neg q \lor r)$\\
+%       $M(\Phi )~=~(q \land (\neg q \lor r))\to p$より，\\
+%       $(q,r)~=~(1,1)$の時，$p$は真になるという制約が追加される.
+%      \end{center}
+%    \end{itemize}
+%   }
+% \end{frame}
+

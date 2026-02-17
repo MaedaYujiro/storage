@@ -1,0 +1,15 @@
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces 論理結合子}}{4}{}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces $\psi $のモデルと極小・極大モデル}}{6}{}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {4.1}{\ignorespaces CNF$\Phi $の極小変換}}{14}{}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces CNF$\Phi $の極大変換}}{15}{}%
+\addvspace {10\p@ }
+\addvspace {10\p@ }
+\contentsline {table}{\numberline {6.1}{\ignorespaces MDS のCPU時間と結果数}}{29}{}%
+\contentsline {table}{\numberline {6.2}{\ignorespaces MIS のCPU時間と結果数}}{30}{}%
+\contentsline {table}{\numberline {6.3}{\ignorespaces MDS と MIS のCNFの変数数と節数の比較}}{33}{}%
+\contentsline {table}{\numberline {6.4}{\ignorespaces MDSとMISのSATソルバー起動回数の比較}}{34}{}%
+\addvspace {10\p@ }

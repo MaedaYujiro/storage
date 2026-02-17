@@ -1,0 +1,30 @@
+\centering
+\small % 文字を少し小さく
+\begin{tikzpicture}[
+  scale=0.82,                 % ← 図全体の縮小率（0.75〜0.9で調整）
+  every node/.style={transform shape}, % ← scaleで文字も縮小
+  >=Stealth,
+  node distance=14mm and 28mm,          % ← ノード間距離（行間, 列間）
+  box/.style={
+    draw, rounded corners=8pt,
+    minimum width=0.24\textwidth,       % ← 幅を相対指定（0.22〜0.26で調整）
+    minimum height=7mm,
+    align=center
+  },
+  lbl/.style={font=\footnotesize}
+]
+
+% ノード
+\node[box] (prob) {問題};
+\node[box, below=18mm of prob] (ans) {問題の解};
+
+\node[box, right=54mm of prob]  (sat)   {SAT 問題};
+\node[box, below=18mm of sat]   (model) {SAT 問題の\\モデル};
+
+% 矢印とラベル
+\draw[->] (prob.east) -- node[midway, above, lbl]{SAT 符号化} (sat.west);
+\draw[->] (sat.south) -- node[midway, right, lbl]{SAT ソルバー} (model.north);
+\draw[->] (model.west) -- node[midway, above, lbl]{復号化} (ans.east);
+\draw[->, dashed] (prob.south) -- (ans.north);
+
+\end{tikzpicture}

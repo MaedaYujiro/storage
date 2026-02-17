@@ -1,0 +1,39 @@
+\begin{algorithm}[H]
+\caption{CNF $\Phi$ からCNF への変換方法$\Omega$(min/max)}
+\label{alg:trans-minmax}
+\begin{algorithmic}[1]
+\Require CNF $\Phi$, mode $\in \{\mathrm{min},\mathrm{max}\}$
+\Ensure  CNF $\Omega$
+\State $P \gets \mathrm{Var}(\Phi)$
+\State $M \gets \top$ %\Comment{additional constraints (empty conjunction)}
+\ForAll{$p \in P$}
+  \State $c_1 \gets \bot$ %\Comment{a disjunction (empty disjunction)}
+  \If{$mode = \mathrm{min}$}
+    \State $t \gets p$ %\Comment{focus on positive literal $p$ (Eq.1)}
+    \State $h \gets \neg p$ %\Comment{final clause is $(h \vee c_1) = (\neg p \vee c_1)$}
+  \Else
+    \State $t \gets \neg p$ %\Comment{focus on negative literal $\neg p$ (Eq.2)}
+    \State $h \gets p$ %\Comment{final clause is $(h \vee c_1) = (p \vee c_1)$}
+  \EndIf
+
+  \ForAll{$clause \in \Phi$}
+    \If{$t \in clause$}
+      \State $x \gets$ new variable
+      \State $c_2 \gets \bot$ %\Comment{$c_2 = \bigvee (clause \setminus \{t\})$}
+      \ForAll{$l \in clause$}
+        \If{$l \neq t$}
+          \State $M \gets M \wedge (\neg x \vee \neg l)$ %\Comment{$x \rightarrow \neg l$}
+          \State $c_2 \gets c_2 \vee l$
+        \EndIf
+      \EndFor
+      \State $M \gets M \wedge (c_2 \vee x)$ %\Comment{$\neg c_2 \rightarrow x$}
+      \State $c_1 \gets c_1 \vee x$
+    \EndIf
+  \EndFor
+
+  \State $M \gets M \wedge (h \vee c_1)$
+\EndFor
+\State $\Omega \gets \Phi \wedge M$
+\State \textbf{return} $\Omega$
+\end{algorithmic}
+\end{algorithm}

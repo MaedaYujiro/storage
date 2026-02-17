@@ -12,6 +12,10 @@ from typing import Dict, Tuple, Optional, List
 
 import matplotlib.pyplot as plt
 
+# 日本語フォント設定
+plt.rcParams['font.sans-serif'] = ['Hiragino Sans', 'Yu Gothic', 'Meirio', 'Takao', 'IPAexGothic', 'IPAPGothic']
+plt.rcParams['axes.unicode_minus'] = False
+
 
 RE_GRID = re.compile(r"^grid(\d+)×(\d+)$")
 
@@ -64,7 +68,6 @@ def plot_methods(
     method_points: Dict[str, List[Tuple[int, float]]],
     methods: List[str],
     default_ymax: float,
-    title: str,
     output_path: Path,
     auto_ymax: bool,
 ) -> None:
@@ -73,6 +76,18 @@ def plot_methods(
     # marker rule
     def marker_for(m: str) -> str:
         return "s" if "trans" in m.lower() else "o"
+    
+    # label rule
+    def label_for(m: str) -> str:
+        result = m
+        # mds, mis プレフィックスを削除
+        result = result.replace("mds-", "").replace("mis-", "").replace("MDS-", "").replace("MIS-", "")
+        # basicとtransを日本語に置換
+        if "trans" in result.lower():
+            result = result.replace("trans", "提案").replace("Trans", "提案").replace("TRANS", "提案")
+        if "basic" in result.lower():
+            result = result.replace("basic", "既存").replace("Basic", "既存").replace("BASIC", "既存")
+        return result
     
     # ----- x-axis auto (timeout(NaN) だけの b は除外) -----
     bs_set = set()
@@ -102,16 +117,16 @@ def plot_methods(
         pts = sorted(method_points[m], key=lambda x: x[0])
         xs = [b for b, _ in pts]
         ys = [t for _, t in pts]
-        plt.plot(xs, ys, marker=marker_for(m), label=m)
+        plt.plot(xs, ys, marker=marker_for(m), label=label_for(m))
 
-    plt.xlabel("Grid Size (n)")
-    plt.ylabel("Time (seconds)")
+    plt.xlabel("Grid Size (n)", fontsize=24)
+    plt.ylabel("Time (seconds)", fontsize=24)
     plt.xlim(xmin - 0.5, xmax + 0.5)
-    plt.xticks(bs)
+    plt.xticks(bs, fontsize=15)
     plt.ylim(0, ymax)
+    plt.yticks(fontsize=18)
     plt.grid(True, linestyle="--", linewidth=0.5)
-    plt.title(title)
-    plt.legend()
+    plt.legend(fontsize=20)
     plt.tight_layout()
     plt.savefig(output_path, dpi=200)
     plt.close()
@@ -168,7 +183,6 @@ def main() -> None:
             method_points,
             mds_methods,
             global_ymax,
-            f"MDS runtime (grid{a_fixed})",
             out_dir / "runtime_mds.png",
             auto_ymax=True,
         )
@@ -178,9 +192,8 @@ def main() -> None:
             method_points,
             mis_methods,
             global_ymax,
-            f"MIS runtime (grid{a_fixed})",
             out_dir / "runtime_mis.png",
-            auto_ymax=False,
+            auto_ymax=True,
         )
 
 

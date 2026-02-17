@@ -1,0 +1,187 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\section{実行実験} \label{chap:experiment}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\section{実験概要}
+論文\cite{adachi2023}では，SATソルバーを1回起動するだけで極小モデルを計算する手法が提案されたが，当該手法の実行性能に関する評価は十分に行われていなかった.同様に，本論文で提案する，SATソルバー1回起動による極大モデル計算方法についても，その性能は未評価である.そこで本節では，極小モデル計算の評価対象としてグラフ問題である極小支配集合問題（Minimal Dominating Set: MDS）を，極大モデル計算の評価対象としてグラフ問題である極大独立集合問題（Maximal Independent Set: MIS）を用いる.
+具体的には，論文\cite{koshimura2009minimal}で提案された極大モデル計算手法（MIS-basic）および極小モデル計算手法（MDS-basic），論文\cite{adachi2023}で提案された極小モデル計算手法（MDS-trans），ならびに本論文で提案する極大モデル計算手法（MIS-trans）を比較対象とし，これらの手法に対して実行実験を行うことで性能評価を行う.\\
+
+\section{実験環境}
+本実験における実行環境は以下の通りである.
+\begin{itemize}
+ \item 実行環境：Mac mini，Apple M4，32GB
+ \item SATソルバー：$CaDiCaL~3.0.0$ 
+ \item 使用言語：$Rust$ 
+ \item 制限時間：1問当たり30分
+\end{itemize}
+
+\section{ベンチマーク}
+今回の実行実験で使用するベンチマークは3行n列（$n=1,2,...,19$）のGrid graphの全19問である.
+ここで，Grid graphとは，整数格子上の点を頂点とし，上下左右に隣接する点同士を辺で結んだグラフである.\\
+支配集合とは，グラフ \(G=(V,E)\) において，頂点集合 \(D\subseteq V\) が，全ての頂点を自分自身または隣接頂点で覆うとき，\(D\) を支配集合と呼ぶ．すなわち，任意の頂点 \(v\in V\) について
+\[
+v\in D \ \ \text{または}\ \ \exists u\in D\ \text{s.t.}\ \{u,v\}\in E
+\]
+が成り立つ．\\
+独立集合とは，グラフ \(G=(V,E)\) において，頂点集合 \(I\subseteq V\) が集合内の頂点同士が隣り合わない性質を満たすとき，\(I\) を独立集合と呼ぶ．これは，
+\[
+\forall u,v\in I\ (u\neq v)\Rightarrow \{u,v\}\notin E
+\]
+で表される．
+
+\begin{example}\rm
+ 図\ref{fig:grid-mds}に3$\times$4のGrid graphにおける極小支配集合（MDS）の例を，図\ref{fig:grid-mis}に3$\times$4のGrid graphにおける極大独立集合（MIS)の例を示す.
+
+ \begin{figure}[ht]
+  \centering
+    \input{tikz/gridgraph-mis}
+  \caption{3$\times$4Grid graphのMIS}
+  \label{fig:grid-mis}
+ \end{figure}
+\end{example}
+
+
+ \begin{figure}[ht]
+  \centering
+    \input{tikz/gridgraph-mds}
+  \caption{3$\times$4Grid graphのMDS}
+  \label{fig:grid-mds}
+ \end{figure}
+
+\FloatBarrier
+
+\section{CPU時間の比較}
+表\ref{tab:mds-results}に MDSの既存手法と提案手法，表\ref{tab:mis-results}に MISの既存手法と提案手法の実行結果（各ベンチマークに対するCPU時間と得られた結果数）を示す．左に既存手法のCPU時間（秒）と得られた結果数，右に提案手法のCPU時間（秒）と得られた結果数を示す．各行において同一ベンチマークに対する両手法の計算時間結果を比較できる．また，赤文字で示されている結果は既存手法より短い時間で解けた問題である.MDS および MIS について，それぞれのカクタスプロットを図\ref{img:mds-plot}，図\ref{img:mis-plot}に示す．横軸は Grid graph の列数 $n$，縦軸は各問題を解くのに要した CPU 時間である．同一の縦軸値に対して右側に位置するほど多くの問題を解けたことを意味し，下側に位置するほど短時間で解けたことを意味する．
+
+図\ref{img:model-discovery}に SAT ソルバー起動に要したCPU時間とモデル計算に要したCPU時間の比較を示す．縦軸はCPU時間（秒），横軸は計算したモデルの数を示している.また，緑のプロットは既存手法でモデル計算に要した合計時間，赤のプロットは提案手法でモデル計算に要した合計時間，水色の棒グラフは既存手法においてSATソルバー起動でモデルを発見するために要した時間，青の棒グラフは既存手法においてSATソルバー起動でUNSATを出力するために要した時間である.
+
+図\ref{img:model-times}に既存手法と提案手法のモデル計算に要したCPU時間推移の比較を示す．青のグラフが既存手法において各モデル計算に要した時間を，赤のグラフが提案手法において各モデル計算に要した時間を示している.このグラフでは上に行くほどモデル計算に時間を要したと言える.
+
+まず表\ref{tab:mds-results}より，極小支配集合問題の全解列挙において既存手法は $3\times10$ まで解けたのに対し，提案手法は $3\times12$ まで解けた．さらに同一サイズの問題で比較すると，$3\times10$ において既存手法が 1361.24 秒を要したのに対し，提案手法は 3.620 秒で解けており，20 分以上の大幅な短縮が確認できる．
+
+次に表\ref{tab:mis-results}より，極大独立集合問題の全解列挙において既存手法は $3\times13$ まで解けたのに対し，提案手法は $3\times18$ まで解けた．また $3\times13$ におけるCPU時間は，既存手法が 584.70 秒であるのに対し，提案手法は 0.36 秒であり，約 10 分の短縮が確認できる．
+
+図\ref{img:mds-plot}および図\ref{img:mis-plot}においても，いずれの問題設定でも提案手法が既存手法よりも下側かつ右側に位置している．したがって，提案手法は既存手法に比べて，同一問題をより短時間で解けるだけでなく，制限時間内に解ける問題サイズの上限も拡大しており，総合的に高い性能を示すことが分かる．
+
+また，図\ref{img:model-discovery}より，MDS および MIS のいずれにおいても，既存手法では頻繁な SAT ソルバーの起動がオーバーヘッドとなり，CPU時間全体の増加を招いていることが分かる．一方，提案手法ではソルバーの起動回数が大幅に抑制されているため，起動に伴うコストが低減され，効率的な計算が実現できている．
+
+さらに，図\ref{img:model-times}より，提案手法は既存手法と比較して，各モデルを計算するのに要する時間がモデル数の増加に伴い短くなり，かつ安定して推移していることが読み取れる．これは，提案手法が大規模な解空間を持つ問題に対しても，高速に解を列挙し続けられることを示しており，CPU時間の短縮を裏付けるものである．
+
+\begin{figure}[t]
+  \centering
+
+  %--- table ---
+  \begin{minipage}{0.95\linewidth}
+    \centering
+    \captionof{table}{MDS のCPU時間と結果数}
+    \label{tab:mds-results}
+    \input{table/mds_result}
+  \end{minipage}
+
+  \vspace{6pt}
+
+  %--- figure ---
+  \begin{minipage}{0.95\linewidth}
+    \centering
+    \includegraphics[width=0.75\linewidth]{images/mds-plot.png}
+    \captionof{figure}{MDS のCPU時間と結果数のプロット}
+    \label{img:mds-plot}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+
+  %--- table ---
+  \begin{minipage}{0.95\linewidth}
+    \centering
+    \captionof{table}{MIS のCPU時間と結果数}
+    \label{tab:mis-results}
+    \input{table/mis_result}
+  \end{minipage}
+
+  \vspace{6pt}
+
+  %--- figure ---
+  \begin{minipage}{0.95\linewidth}
+    \centering
+    \includegraphics[width=0.75\linewidth]{images/mis-plot.png}
+    \captionof{figure}{MIS のCPU時間と結果数のプロット}
+    \label{img:mis-plot}
+  \end{minipage}
+\end{figure}
+
+\begin{figure}[t]
+ \centering
+ \begin{minipage}{0.95\linewidth}
+  \centering
+  \includegraphics[width=1.0\linewidth]{images/model_discovery.png}
+  \caption{SATソルバー起動により要したCPU時間の比較}
+  \label{img:model-discovery}
+ \end{minipage}
+ 
+ \vspace{10pt}
+
+ \begin{minipage}{0.95\linewidth}
+  \centering
+  \includegraphics[width=1.0\linewidth]{images/model_times.png}
+  \caption{既存手法と提案手法の計算したモデル数とCPU時間推移}
+  \label{img:model-times}
+  \end{minipage}
+\end{figure}
+
+\FloatBarrier
+
+\section{CNFの変数，節の数とSATソルバー起動回数の比較}
+表\ref{tab:mds-mis-cnf} に，Grid graph を CNF として定式化した際の変数数と節数を示す．varsが変数の数，clausesが節の数を示している.また，提案手法ではCNFを変換した後の変数，節の数が示されている.各行において同一ベンチマークに対する両手法の変数，節の数を比較できる．
+
+表\ref{tab:c-solver}に，各計算手法における SAT ソルバー（CaDiCaL）の起動回数と，既存手法に対する提案手法の割合（\%)を示す．各行において同一ベンチマークに対する両手法のSATソルバー起動回数を比較できる．
+
+表\ref{tab:mds-mis-cnf}より，MDSでの提案手法では，CNF の変換過程で Tseitin 変換を用いているため，補助変数が導入され，既存手法に比べて変数数が増加している．MIS の方が既存手法と提案手法の性能差が大きく現れている要因として，MDSでの提案手法では Tseitin 変換により CNF の構造が複雑化することでCPU時間が増加しやすい点が挙げられる．その結果として，MDS では変換によるCPU時間の高速化が MIS ほど顕著に表れにくいと考えられる．
+
+表\ref{tab:c-solver}より，提案手法では，SAT ソルバーの起動回数が期待通り，得られた解の数と一致しており，解の列挙に対して無駄な起動が発生していないことが確認できる．具体例として $3\times8$ の Grid graph に着目すると，MDSの既存手法は計算過程で CaDiCaL を 17406 回起動しているのに対し，提案手法は 3660 回であり，提案手法は既存手法に比べて約21\%の起動回数で済んでいる．このように SAT ソルバー起動回数が減少していることは，ソルバー起動に伴うオーバーヘッドの削減につながるため，CPU時間の短縮に寄与していると考えられる．
+
+\begin{table}[t]
+ \centering
+ \caption{MDS と MIS のCNFの変数数と節数の比較}
+ \label{tab:mds-mis-cnf}
+ \input{table/mds-mis-cnf.tex}
+\end{table}
+
+\begin{table}[t]
+ \centering
+ \caption{MDSとMISのSATソルバー起動回数の比較}
+ \label{tab:c-solver}
+ \input{table/c-solver}
+\end{table}
+
+% \begin{table}[htbp]
+%  \centering
+%  \caption{MDS のCPU時間と結果数}
+%  \label{tab:mds-results}
+%  \input{table/mds_result}
+% \end{table}
+
+% \begin{figure}[h]
+%  \centering
+%  \includegraphics[scale=0.6]{images/mds-plot.png}
+%  \caption{MDS のプロット}
+%  \label{img:mds-plot}
+% \end{figure}
+
+
+
+% \begin{table}[h]
+%  \centering
+%  \caption{MIS のCPU時間と結果数}
+%  \label{tab:mis-results}
+%  \input{table/mis_result}
+% \end{table}
+
+% \begin{figure}[h]
+%  \centering
+%  \includegraphics[scale=0.6]{images/mis-plot.png}
+%  \caption{MIS のプロット}
+%  \label{img:mis-plot}
+% \end{figure}
+
+

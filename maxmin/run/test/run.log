@@ -1,0 +1,70 @@
+mkdir -p test
+cp csv/BENCH.csv test/BENCH.csv
+
+START solving problems in csv/BENCH.csv
+BEGIN cycle5.col mis-trans [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark/cycle5.col  > test/log/cycle5.col__mis-trans.log 2>&1 < /dev/null
+END cycle5.col mis-trans [Sun Dec 21 23:13:17 2025]
+
+BEGIN cycle5.col mds-basic [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark/cycle5.col  > test/log/cycle5.col__mds-basic.log 2>&1 < /dev/null
+END cycle5.col mds-basic [Sun Dec 21 23:13:17 2025]
+
+BEGIN cycle5.col mis-basic [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark/cycle5.col  > test/log/cycle5.col__mis-basic.log 2>&1 < /dev/null
+END cycle5.col mis-basic [Sun Dec 21 23:13:17 2025]
+
+BEGIN cycle5.col mds-trans [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark/cycle5.col  > test/log/cycle5.col__mds-trans.log 2>&1 < /dev/null
+END cycle5.col mds-trans [Sun Dec 21 23:13:17 2025]
+
+BEGIN grid4×1.col mis-trans [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark/grid4×1.col  > test/log/grid4×1.col__mis-trans.log 2>&1 < /dev/null
+END grid4×1.col mis-trans [Sun Dec 21 23:13:17 2025]
+
+BEGIN grid4×1.col mds-basic [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark/grid4×1.col  > test/log/grid4×1.col__mds-basic.log 2>&1 < /dev/null
+END grid4×1.col mds-basic [Sun Dec 21 23:13:17 2025]
+
+BEGIN grid4×1.col mis-basic [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark/grid4×1.col  > test/log/grid4×1.col__mis-basic.log 2>&1 < /dev/null
+END grid4×1.col mis-basic [Sun Dec 21 23:13:17 2025]
+
+BEGIN grid4×1.col mds-trans [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark/grid4×1.col  > test/log/grid4×1.col__mds-trans.log 2>&1 < /dev/null
+END grid4×1.col mds-trans [Sun Dec 21 23:13:17 2025]
+
+BEGIN path4.col mis-trans [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark/path4.col  > test/log/path4.col__mis-trans.log 2>&1 < /dev/null
+END path4.col mis-trans [Sun Dec 21 23:13:17 2025]
+
+BEGIN path4.col mds-basic [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark/path4.col  > test/log/path4.col__mds-basic.log 2>&1 < /dev/null
+END path4.col mds-basic [Sun Dec 21 23:13:17 2025]
+
+BEGIN path4.col mis-basic [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark/path4.col  > test/log/path4.col__mis-basic.log 2>&1 < /dev/null
+END path4.col mis-basic [Sun Dec 21 23:13:17 2025]
+
+BEGIN path4.col mds-trans [Sun Dec 21 23:13:17 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark/path4.col  > test/log/path4.col__mds-trans.log 2>&1 < /dev/null
+END path4.col mds-trans [Sun Dec 21 23:13:18 2025]
+
+BEGIN petersen.col mis-trans [Sun Dec 21 23:13:18 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-trans benchmark/petersen.col  > test/log/petersen.col__mis-trans.log 2>&1 < /dev/null
+END petersen.col mis-trans [Sun Dec 21 23:13:18 2025]
+
+BEGIN petersen.col mds-basic [Sun Dec 21 23:13:18 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-basic benchmark/petersen.col  > test/log/petersen.col__mds-basic.log 2>&1 < /dev/null
+END petersen.col mds-basic [Sun Dec 21 23:13:18 2025]
+
+BEGIN petersen.col mis-basic [Sun Dec 21 23:13:18 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mis-basic benchmark/petersen.col  > test/log/petersen.col__mis-basic.log 2>&1 < /dev/null
+END petersen.col mis-basic [Sun Dec 21 23:13:18 2025]
+
+BEGIN petersen.col mds-trans [Sun Dec 21 23:13:18 2025]
+Running: gtime -v gtimeout 1800 ./target/release/maxmin mds-trans benchmark/petersen.col  > test/log/petersen.col__mds-trans.log 2>&1 < /dev/null
+END petersen.col mds-trans [Sun Dec 21 23:13:18 2025]
+
+FINISH solving problems in csv/BENCH.csv
+See test

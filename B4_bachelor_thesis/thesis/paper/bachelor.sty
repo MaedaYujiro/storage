@@ -1,0 +1,47 @@
+%%% Bachelor style
+% 2019.12.3  sakai
+
+\makeatletter
+
+\renewcommand{\maketitle}{%
+\begin{titlepage}
+  \let\footnotesize\small
+  \let\footnoterule\relax
+  \let\footnote\thanks
+  \null%\vfil
+  \vskip 60\p@
+  \begin{center}%
+    \vskip -2em%
+    {\LARGE \@school\@bookname \par}%
+    \vskip 4em%
+    {\huge \@title \par}%
+      \vskip 3em%
+    {\Large \@date \par}%       % Set date in \large size. 
+    \vfil\vfil\vfil
+    {\LARGE \@author \par}
+  \end{center}\par
+  \@thanks%\vfil
+   \null
+\end{titlepage}
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\p@thanks\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\@title\@empty
+  \global\let\@bookname\@empty
+  \global\let\@school\@empty
+  \global\let\school\relax
+  \global\let\bookname\relax
+  \global\let\title\relax
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax
+}%
+\let\@bookname\@empty
+\let\@school\@empty
+\long\def\bookname#1{\long\def\@bookname{#1}}
+\long\def\school#1{\long\def\@school{#1}}
+\makeatother

@@ -1,0 +1,99 @@
+
+\PassOptionsToPackage{dvipdfmx}{graphicx} 
+
+%%% for platex
+\documentclass[dvipdfmx,a4paper,12pt]{jbook}
+%%% for lualatex
+%\documentclass[a4paper,12pt]{ltjbook}
+
+\usepackage{bachelor}
+\usepackage{comment}
+\usepackage{afterpage}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{amsmath,amssymb}
+\usepackage{float} 
+\usepackage{placeins}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+ \makeatletter
+ \let\Return\@undefined
+ \makeatother
+ \algrenewcommand\algorithmicrequire{\textbf{Input:}}
+ \algrenewcommand\algorithmicensure{\textbf{Output:}}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{
+  arrows.meta,
+  positioning,
+  shapes.multipart,
+  fit,
+  backgrounds,
+  calc
+}
+\usepackage{caption}
+\usepackage{titlesec}
+\titleformat{\paragraph}[block]
+  {\normalfont\large\bfseries}
+  {}
+  {0pt}
+  {}
+\titlespacing*{\paragraph}{0pt}{3.25ex plus 1ex minus .2ex}{1ex}
+
+
+
+\newtheorem{definition}{定義}
+\newtheorem{example}{例}
+\newtheorem{formula}{式}
+
+\input{macro} % 自分用のマクロ
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% タイトル
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\school{名古屋大学情報学部\\} 
+\bookname{コンピュータ科学科\\情報システム系\\卒業論文}
+\title{\parbox{1.05\textwidth}{\centering
+SAT符号化を用いた命題論理式の\\極小・極大モデル計算の実装と評価}}
+\date{2026年2月}
+\author{102230349~~~前田 悠士朗}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+% 本体
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\begin{document}
+\maketitle
+
+\input{abstract}    % 概要
+
+\tableofcontents    % 目次
+\listoffigures      % 図の目次
+\listoftables       % 表の目次
+%\lstlistoflistings  % コードの目次
+
+% ここから「本文」
+\input{chapter1}
+\input{chapter2}
+\input{chapter3}
+\input{chapter4}
+\input{chapter5}
+\input{chapter6}
+\input{chapter7}
+
+% ここまで
+
+\input{ack}         % 謝辞
+
+\bibliographystyle{jplain} % 参考文献スタイル
+\bibliography{bachelor,aisat}    % 参考文献リスト
+
+% 付録
+%\input{appendix}
+
+\end{document}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% Local Variables:
+%%% mode: japanese-latex
+%%% TeX-master: t
+%%% End:

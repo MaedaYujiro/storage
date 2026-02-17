@@ -1,0 +1,75 @@
+%%% Packages
+\usepackage[dvipdfmx]{graphicx}
+\usepackage{lineno}
+%\usepackage{bm}
+\usepackage{array}
+\usepackage{url}
+\usepackage{alltt}
+\usepackage{ascmac}
+\usepackage{tikz}
+\usepackage{subcaption}
+\usepackage{longtable}
+\usepackage{seqsplit}
+\usepackage{appendix}
+\usepackage{comment}
+\usetikzlibrary{arrows,shapes}
+\usetikzlibrary{positioning}
+\usepackage{listings}
+\usepackage{plistings}
+
+%%% 数学パッケージ
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+
+%%% 表組み関連パッケージ
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{float}
+\usepackage{placeins}
+
+%%% アルゴリズム関連パッケージ
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+%%% 定理環境の定義
+\usepackage{amsthm}
+\newtheorem{theorem}{定理}
+\newtheorem{lemma}[theorem]{補題}
+\newtheorem{proposition}[theorem]{命題}
+\newtheorem{corollary}[theorem]{系}
+\theoremstyle{definition}
+\newtheorem{definition}{定義}
+\newtheorem{example}{例}
+\newtheorem{formula}{式}
+\theoremstyle{remark}
+\newtheorem{remark}{注意}
+
+\def\lstlistingname{コード}
+\def\lstlistlistingname{コード目次}
+%%\renewcommand{\bibname}{参考文献}
+\captionsetup[figure]{labelformat=default}
+\usepackage{color}
+
+%%% For ASP
+\newcommand{\asap}{\textit{teaspoon}}
+\newcommand{\gringo}{\textit{gringo}}
+\newcommand{\clingo}{\textit{clingo}}
+\newcommand{\dlv}{\textit{DLV}}
+\newcommand{\wasp}{\textit{WASP}}
+\newcommand{\code}[1]{\lstinline[basicstyle=\ttfamily]{#1}}
+\newcommand{\naf}[1]{\ensuremath{{\sim\!\!{#1}}}}
+\newcommand{\head}[1]{\ensuremath{\mathit{head}(#1)}}
+\newcommand{\body}[1]{\ensuremath{\mathit{body}(#1)}}
+%\newcommand{\atom}[1]{\ensuremath{\mathit{atom}(#1)}}
+\newcommand{\poslits}[1]{\ensuremath{{#1}^+}}
+\newcommand{\neglits}[1]{\ensuremath{{#1}^-}}
+\newcommand{\pbody}[1]{\poslits{\body{#1}}}
+\newcommand{\nbody}[1]{\neglits{\body{#1}}}
+%\newcommand{\Cn}[1]{\ensuremath{\mathit{Cn}(#1)}}
+\newcommand{\reduct}[2]{\ensuremath{#1^{#2}}}
+
+%%% Local Variables:
+%%% mode: japanese-latex
+%%% TeX-master: "paper"
+%%% End:

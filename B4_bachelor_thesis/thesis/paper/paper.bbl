@@ -1,0 +1,67 @@
+\begin{thebibliography}{10}
+
+\bibitem{DBLP:series/faia/Biere09}
+Armin Biere.
+\newblock Bounded model checking.
+\newblock In {\em Handbook of Satisfiability}, pp. 457--481. {IOS} Press, 2009.
+
+\bibitem{jackson2006softwareabstractions}
+Daniel Jackson.
+\newblock {\em Software Abstractions: Logic, Language, and Analysis}.
+\newblock The MIT Press, 2006.
+
+\bibitem{DBLP:conf/ecai/KautzS92}
+Henry~A. Kautz and Bart Selman.
+\newblock Planning as satisfiability.
+\newblock In {\em Proceedings of the 10th European Conference on Artificial
+  Intelligence (ECAI 1992)}, pp. 359--363, 1992.
+
+\bibitem{koshimura2009minimal}
+Miyuki Koshimura, Hidetomo Nabeshima, Hiroshi Fujita, and Ryuzo Hasegawa.
+\newblock Minimal model generation with respect to an atom set.
+\newblock {\em FTP}, Vol.~9, pp. 49--59, 2009.
+
+\bibitem{niemela96}
+Ilkka Niemel{\"a}.
+\newblock A tableau calculus for minimal model reasoning.
+\newblock In {\em Theorem Proving with Analytic Tableaux and Related Methods},
+  Vol. 1071 of {\em Lecture Notes in Computer Science}, pp. 278--294. Springer,
+  1996.
+
+\bibitem{soh}
+Takehide Soh, Mutsunori Banbara, Naoyuki Tamura, and Daniel~Le Berre.
+\newblock Solving multiobjective discrete optimization problems with
+  propositional minimal model generation.
+\newblock In J.~Christopher Beck, editor, {\em Principles and Practice of
+  Constraint Programming - 23rd International Conference, {CP} 2017, Melbourne,
+  VIC, Australia, August 28 - September 1, 2017, Proceedings}, Vol. 10416 of
+  {\em Lecture Notes in Computer Science}.
+
+\bibitem{CSC06:TamuraB08}
+Naoyuki Tamura and Mutsunori Banbara.
+\newblock Sugar: a {CSP} to {SAT} translator based on order encoding.
+\newblock In {\em Proceedings of the 2nd International CSP Solver Competition},
+  pp. 65--69, 2008.
+
+\bibitem{DBLP:journals/constraints/TamuraTKB09}
+Naoyuki Tamura, Akiko Taga, Satoshi Kitagawa, and Mutsunori Banbara.
+\newblock Compiling finite linear {CSP} into {SAT}.
+\newblock {\em Constraints}, Vol.~14, No.~2, pp. 254--272, 2009.
+
+\bibitem{井上克巳2010sat}
+井上克巳, 田村直之.
+\newblock {SAT}ソルバーの基礎(\verb|<特集>|最近の{SAT}技術の発展).
+\newblock 人工知能, Vol.~25, No.~1, pp. 57--67, 2010.
+
+\bibitem{adachi2023}
+足立啓一.
+\newblock
+  リテラルの充足に対する制約に基づく命題論理式の充足可能性を保つ変換に関する研究.
+\newblock 修士論文, 神戸大学大学院 システム情報学研究科, 2023.
+
+\bibitem{長谷川隆三2010モデル列挙とモデル計数}
+長谷川隆三, 藤田博, 越村三幸.
+\newblock モデル列挙とモデル計数 (\verb|<特集>|最近の{SAT}技術の発展).
+\newblock 人工知能, Vol.~25, No.~1, pp. 96--104, 2010.
+
+\end{thebibliography}

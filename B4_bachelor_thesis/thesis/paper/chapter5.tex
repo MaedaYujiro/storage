@@ -1,0 +1,271 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\chapter{提案手法の実装} \label{chap:maxminalgo}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\section{変換アルゴリズム}
+\label{sec:algo}
+極小変換，極大変換の一般的なアルゴリズムをAlgorithm\ref{alg:trans-minmax}に記述する.アルゴリズムでは，入力をCNF$\Phi$とmin,maxとし，入力によって極小変換と極大変換に分岐できる.また出力は変換後のCNF$\Omega$である.
+
+CNF $\Phi$ から変換後の CNF $\Omega$ を構成する手順を，行番号に沿って説明する．Algorithm \ref{alg:trans-minmax} は入力として CNF $\Phi$ と mode $\in\{\mathrm{min},\mathrm{max}\}$ を受け取り，補助制約 $M$ を生成したうえで $\Omega \gets \Phi \land M$ を返す（行1--2, 28--29）．
+
+\paragraph{準備（行1--2）}
+まず $\Phi$ に出現する命題変数全体を $P \gets \mathrm{Var}(\Phi)$ として取り出す（行1）．続いて，追加制約を保管するための CNF を $M \gets \top$ と初期化する（行2）．
+
+\paragraph{mode による分岐（行3--11）}
+各変数 $p \in P$ について，その変数に関する「極小／極大らしさ」を強制する制約を追加する（行3）．このとき，まず $c_1 \gets \bot$ を用意し（行4），mode に応じて 2 つのリテラル $t$ と $h$ を次のように選ぶ（行5--11）．
+\begin{itemize}
+  \item mode = min のとき： $t \gets p,\ \ h \gets \neg p$（行6--7）．
+  \item mode = max のとき： $t \gets \neg p,\ \ h \gets p$（行9--10）．
+\end{itemize}
+ここで $t$ は「節の中で注目するリテラル」，$h$ は最終的に追加する含意 $(h \lor c_1)$ の左側に出るリテラル（行26）である．この入れ替えにより，極小変換と極大変換を同一の枠組みで処理できる．
+
+\paragraph{各節に対する補助変数の導入（行12--25）}
+次に $\Phi$ の各節 $clause \in \Phi$ を走査し（行12），その節が $t$ を含む場合のみ処理を行う（行13）．\\
+$t \in clause$ であるとき，新しい補助変数 $x$ を 1 つ導入し（行14），さらに $c_2 \gets \bot$ を初期化する（行15）．\\
+その後，節 $clause$ 内の各リテラル $l \in clause$ を走査し（行16），$l \neq t$ のものだけを用いて以下を行う（行17--20）．\\
+\begin{enumerate}
+  \item 制約 $(\neg x \lor \neg l)$ を $M$ に追加する（行18）．
+  \item $c_2 \gets c_2 \lor l$ として，$t$ 以外のリテラルの選言 $c_2$ を作る（行19）．
+\end{enumerate}
+このとき，$(\neg x \lor \neg l)$ は $x \to \neg l$ を表すため，$x$ が真なら「$t$ 以外のリテラルはすべて偽である」ことを要求する．
+
+ループ後（行21），さらに $(c_2 \lor x)$ を $M$ に追加する（行22）．
+これは $(\neg c_2) \to x$ を表し，節中の他リテラル（$t$ 以外）がすべて偽（すなわち $c_2$ が偽）なら $x$ を真にせよ，という意味になる．結果として，$x$ は
+\[
+x \ \leftrightarrow\  \bigwedge_{l \in clause,\ l\neq t} \neg l
+\]
+（「その節で $t$ 以外がすべて偽である」こと）を CNF で表す指示変数として機能する．最後に $c_1 \gets c_1 \lor x$ として（行23），$t$ を含む各節について生成した $x$ の選言を $c_1$ に保管する（行23）．
+
+\paragraph{変数ごとの主要制約の追加（行26）}
+全節の走査が終わると，$M \gets M \land (h \lor c_1)$ を追加する（行26）．\\
+$c_1$ は「$t$ を含むどれかの節で，$t$ 以外がすべて偽になる（＝その節が $t$ に依存する）」ことを表す．したがって $(h \lor c_1)$ は
+\[
+\neg h \to c_1
+\]
+を意味し，\textbf{$h$ を偽にする（min なら $p$ を真にする，max なら $p$ を偽にする）場合には，その選択が必須である状況（$c_1$ が真）を要求する}
+という形で，極小性，極大性を CNF 制約として埋め込む．
+
+\paragraph{出力（行28--29）}
+以上で得た $M$ を元の CNF に連言し，$\Omega \gets \Phi \land M$ を返す（行28--29）．\\
+この $\Omega$ を SAT ソルバーで 1 回解くことで，mode に応じた極小モデル，極大モデルに対応する解を得る（Algorithm 2 の目的）．
+
+
+\begin{algorithm}[t]
+\caption{CNF $\Phi$ からCNF への変換方法$\Omega$(min/max)}
+\label{alg:trans-minmax}
+\begin{algorithmic}[1]
+\Require CNF $\Phi$, mode $\in \{\mathrm{min},\mathrm{max}\}$
+\Ensure  CNF $\Omega$
+\State $P \gets \mathrm{Var}(\Phi)$
+\State $M \gets \top$ %\Comment{additional constraints (empty conjunction)}
+\ForAll{$p \in P$}
+  \State $c_1 \gets \bot$ %\Comment{a disjunction (empty disjunction)}
+  \If{$mode = \mathrm{min}$}
+    \State $t \gets p$ %\Comment{focus on positive literal $p$ (Eq.1)}
+    \State $h \gets \neg p$ %\Comment{final clause is $(h \vee c_1) = (\neg p \vee c_1)$}
+  \Else
+    \State $t \gets \neg p$ %\Comment{focus on negative literal $\neg p$ (Eq.2)}
+    \State $h \gets p$ %\Comment{final clause is $(h \vee c_1) = (p \vee c_1)$}
+  \EndIf
+
+  \ForAll{$clause \in \Phi$}
+    \If{$t \in clause$}
+      \State $x \gets$ new variable
+      \State $c_2 \gets \bot$ %\Comment{$c_2 = \bigvee (clause \setminus \{t\})$}
+      \ForAll{$l \in clause$}
+        \If{$l \neq t$}
+          \State $M \gets M \wedge (\neg x \vee \neg l)$ %\Comment{$x \rightarrow \neg l$}
+          \State $c_2 \gets c_2 \vee l$
+        \EndIf
+      \EndFor
+      \State $M \gets M \wedge (c_2 \vee x)$ %\Comment{$\neg c_2 \rightarrow x$}
+      \State $c_1 \gets c_1 \vee x$
+    \EndIf
+  \EndFor
+
+  \State $M \gets M \wedge (h \vee c_1)$
+\EndFor
+\State $\Omega \gets \Phi \wedge M$
+\State \textbf{return} $\Omega$
+\end{algorithmic}
+\end{algorithm}
+
+%=========================
+\section{変換アルゴリズムの動作例}
+\label{subsec:example-trans-minmax}
+
+本節では，Algorithm~\ref{alg:trans-minmax} が具体的にどのように新規変数を追加し，CNFを変換するかを，小さなサイズの CNF を入力として示す．
+
+\paragraph{入力 CNF}
+次の CNF を入力 $\Phi$ とする：
+\begin{align}
+\Phi \;=\;& (p \lor q)\ \land\ (p \lor \neg q)\ \land\ (\neg p \lor r).
+\label{eq:phi-example}
+\end{align}
+出現変数は $P=\mathrm{Var}(\Phi)=\{p,q,r\}$ である．
+
+%------------------------------------------------------------
+\paragraph{極小変換（mode=min)}
+Algorithm~\ref{alg:trans-minmax} は各 $p\in P$ について，$t$ を含む節ごとに新規変数を導入し，最後に $(h\lor c_1)$ を追加する．
+以下では，変数ごとに追加される新規変数と制約を明示する．\\
+また，行26で各変数$p$に対して追加する節$(h \lor c_1)$を以後，極小（極大）性制約と呼ぶ.
+
+%=========================
+\subsubsection*{(1) 変数 $p$ に対する処理（min：$t=p,\ h=\neg p$）}
+
+\noindent
+$\Phi$ のうち $t=p$ を含む節は
+\begin{center}
+ $~~~~~~C_1=(p\lor q)$\\
+ $\qquad C_2=(p\lor \neg q)$
+
+\end{center}
+
+の 2 つである．それぞれに対して新規変数を導入する
+
+\begin{itemize}
+  \item 節 $C_1=(p\lor q)$ に対して新規変数 $x_{p,1}$ を導入する．
+  この節で $t=p$ 以外のリテラルは $q$ だけなので，
+  $x_{p,1}$ は$q$ が偽であることを表す指示変数（$x_{p,1}\leftrightarrow \neg q$）になる．
+  Algorithm~\ref{alg:trans-minmax}（行18,22）に従い，次を $M$ に追加する
+  \begin{align}
+    (\neg x_{p,1}\lor \neg q)\ \land\ (q \lor x_{p,1}). \label{eq:add-xp1}
+  \end{align}
+
+  \item 節 $C_2=(p\lor \neg q)$ に対して新規変数 $x_{p,2}$ を導入する．
+  $t=p$ 以外のリテラルは $\neg q$ だけなので，
+  $x_{p,2}\leftrightarrow \neg(\neg q)\equiv q$ を表す（$x_{p,2}\leftrightarrow q$）．
+  よって追加制約は
+  \begin{align}
+    (\neg x_{p,2}\lor \neg(\neg q))\ \land\ (\neg q \lor x_{p,2})
+    \;\equiv\;
+    (\neg x_{p,2}\lor q)\ \land\ (\neg q \lor x_{p,2}). \label{eq:add-xp2}
+  \end{align}
+\end{itemize}
+
+\noindent
+このとき，$c_1$ は，$p$ を含むどれかの節で，$p$ 以外がすべて偽を表す選言なので
+\[
+c_1 = x_{p,1}\ \lor\ x_{p,2}.
+\]
+最後に Algorithm~\ref{alg:trans-minmax}（行26）により極小性制約 $(h\lor c_1)$ を追加する
+\begin{align}
+(\neg p \lor x_{p,1}\lor x_{p,2}). \label{eq:add-p-main}
+\end{align}
+
+%=========================
+\subsubsection*{(2) 変数 $q$ に対する処理（min：$t=q,\ h=\neg q$）}
+
+\noindent
+今度は $t=q$ を含む節だけを見る．$\Phi$ で $q$ を含むのは
+\[
+C_1=(p\lor q)
+\]
+のみである．したがって新規変数は 1 つ
+
+\begin{itemize}
+  \item 節 $C_1=(p\lor q)$ に対して新規変数 $x_{q,1}$ を導入する．
+  $t=q$ 以外のリテラルは $p$ だけなので，$x_{q,1}\leftrightarrow \neg p$ を表す．
+  追加制約は
+  \begin{align}
+    (\neg x_{q,1}\lor \neg p)\ \land\ (p \lor x_{q,1}). \label{eq:add-xq1}
+  \end{align}
+\end{itemize}
+
+\noindent
+このとき $c_1=x_{q,1}$ であり，極小性制約は
+\begin{align}
+(\neg q \lor x_{q,1}). \label{eq:add-q-main}
+\end{align}
+
+%=========================
+\subsubsection*{(3) 変数 $r$ に対する処理（min：$t=r,\ h=\neg r$）}
+
+\noindent
+$\Phi$ で $r$ を含むのは
+\[
+C_3=(\neg p\lor r)
+\]
+のみである．新規変数を 1 つ導入する：
+
+\begin{itemize}
+  \item 節 $C_3=(\neg p\lor r)$ に対して新規変数 $x_{r,1}$ を導入する．
+  $t=r$ 以外のリテラルは $\neg p$ なので，$x_{r,1}\leftrightarrow \neg(\neg p)\equiv p$ を表す．
+  追加制約は：
+  \begin{align}
+    (\neg x_{r,1}\lor \neg(\neg p))\ \land\ (\neg p \lor x_{r,1})
+    \;\equiv\;
+    (\neg x_{r,1}\lor p)\ \land\ (\neg p \lor x_{r,1}). \label{eq:add-xr1}
+  \end{align}
+\end{itemize}
+
+\noindent
+このとき $c_1=x_{r,1}$ であり，極小性制約は：
+\begin{align}
+(\neg r \lor x_{r,1}). \label{eq:add-r-main}
+\end{align}
+
+%------------------------------------------------------------
+\paragraph{得られる追加制約 $M$ と出力 $\Omega$}
+以上で生成された追加制約 $M$ は
+\begin{align}
+M \;=\;&
+(\neg x_{p,1}\lor \neg q)\land(q\lor x_{p,1})
+\land(\neg x_{p,2}\lor q)\land(\neg q\lor x_{p,2})
+\land(\neg p\lor x_{p,1}\lor x_{p,2})
+\nonumber\\
+&\land(\neg x_{q,1}\lor \neg p)\land(p\lor x_{q,1})
+\land(\neg q\lor x_{q,1})
+\nonumber\\
+&\land(\neg x_{r,1}\lor p)\land(\neg p\lor x_{r,1})
+\land(\neg r\lor x_{r,1}).
+\label{eq:M-example}
+\end{align}
+したがって出力は $\Omega=\Phi\land M$ である：
+\begin{align}
+\Omega \;=\;& (p \lor q)\land(p \lor \neg q)\land(\neg p \lor r)\ \land\ M.
+\label{eq:Omega-example}
+\end{align}
+
+導入された各新規変数は，対応する節において，注目リテラル $t$ 以外がすべて偽を表す指示変数である（Algorithm~\ref{alg:trans-minmax} 行18--22）．
+例えば
+\[
+x_{p,1}\leftrightarrow \neg q,\qquad
+x_{p,2}\leftrightarrow q,\qquad
+x_{q,1}\leftrightarrow \neg p,\qquad
+x_{r,1}\leftrightarrow p
+\]
+となっており，極小性制約
+\[
+(\neg p \lor x_{p,1}\lor x_{p,2}),\quad
+(\neg q \lor x_{q,1}),\quad
+(\neg r \lor x_{r,1})
+\]
+は$p,q,r$ を真にする場合は，それが必須であることを $x$ によって証明しなければならないという意味を持ち，CNF に埋め込むことで極小性を与える．
+
+%------------------------------------------------------------
+\paragraph{極大変換（mode=max ）}
+極大変換では，各変数ごとに
+\[
+t\gets \neg p,\ \ h\gets p
+\]
+のように $t$ と $h$ が入れ替わるだけで，節の走査・新規変数の導入・制約生成は同一である
+（Algorithm~\ref{alg:trans-minmax} 行5--11）．
+したがって，上の例をそのまま用い，
+$\neg p$ を含む節だけが $p$ の処理対象になる点に注意して同様に展開できる．
+%=========================
+
+
+% \section{変換の実装}
+% \label{sec:encoding}
+% \cite{koshimura2009minimal}で提案された極大・極小モデルの計算方法，\cite{adachi2023}で提案された極小モデルの計算方法，さらに本論文での極大モデルの計算方法を実装するにあたり，どのように実装したかを図\ref{fig:archi}に示す.\\
+% 今回の実装では，グラフ問題を用いて実装を行い，極大モデルは極大独立集合問題（MIS），極小モデルは極小支配集合問題（MDS）で計算した.また，CSPの構築にはcp4rust用い，SAT変換は順序符号化，SATソルバーはCaDiCaLを使用した.
+
+% \begin{figure}[ht]
+%   \centering
+%   \resizebox{\textwidth}{!}{%
+%     \input{tikz/architecture}%
+%   }
+%   \caption{CSP--SAT に基づく極小・極大集合列挙アーキテクチャ}
+%  \label{fig:archi}
+% \end{figure}

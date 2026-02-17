@@ -1,0 +1,28 @@
+{
+    "latex-workshop.latex.tools": [
+        {
+            "name": "latexmk",
+            "command": "latexmk",
+            "args": [
+                "-e",
+                "$latex=q/uplatex %O -synctex=1 -interaction=nonstopmode -file-line-error %S/",
+                "-e",
+                "$bibtex=q/upbibtex %O %S/",
+                "-e",
+                "$dvipdf=q/dvipdfmx %O -o %D %S/",
+                "-norc",
+                "-pdfdvi",
+                "%DOC%"
+            ]
+        }
+    ],
+    "latex-workshop.latex.recipes": [
+        {
+            "name": "uplatex",
+            "tools": [
+                "latexmk"
+            ]
+        }
+    ],
+    "latex-workshop.latex.autoBuild.run": "onFileChange"
+}

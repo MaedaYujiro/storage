@@ -1,0 +1,33 @@
+\contentsline {chapter}{\numberline {第1章}はじめに}{1}{}%
+\contentsline {chapter}{\numberline {第2章}命題論理式の極小・極大モデル}{3}{}%
+\contentsline {section}{\numberline {2.1}SAT問題の定義}{3}{}%
+\contentsline {section}{\numberline {2.2}CNFの定義}{5}{}%
+\contentsline {section}{\numberline {2.3}極大モデル，極小モデルの定義}{5}{}%
+\contentsline {chapter}{\numberline {第3章}SATソルバー複数回起動による極小・極大モデル計算の既存研究}{7}{}%
+\contentsline {chapter}{\numberline {第4章}SAT符号化を用いたSATソルバー1回起動による極小・極大モデル計算方法}{11}{}%
+\contentsline {section}{\numberline {4.1}SATソルバー1回起動による極小モデル計算の先行研究}{11}{}%
+\contentsline {paragraph}{極小モデル計算のためのCNF変換方法}{11}{}%
+\contentsline {paragraph}{CNFの変換式}{12}{}%
+\contentsline {section}{\numberline {4.2}SATソルバー1回起動による極大モデル計算方法}{12}{}%
+\contentsline {paragraph}{極大モデル計算のためのCNF変換方法}{12}{}%
+\contentsline {paragraph}{CNFの変換式}{13}{}%
+\contentsline {paragraph}{極小モデル，極大モデル計算の例と計算過程}{14}{}%
+\contentsline {chapter}{\numberline {第5章}提案手法の実装}{17}{}%
+\contentsline {section}{\numberline {5.1}変換アルゴリズム}{17}{}%
+\contentsline {paragraph}{準備（行1--2）}{17}{}%
+\contentsline {paragraph}{mode による分岐（行3--11）}{17}{}%
+\contentsline {paragraph}{各節に対する補助変数の導入（行12--25）}{18}{}%
+\contentsline {paragraph}{変数ごとの主要制約の追加（行26）}{18}{}%
+\contentsline {paragraph}{出力（行28--29）}{19}{}%
+\contentsline {section}{\numberline {5.2}変換アルゴリズムの動作例}{19}{}%
+\contentsline {paragraph}{入力 CNF}{19}{}%
+\contentsline {paragraph}{極小変換（mode=min)}{19}{}%
+\contentsline {paragraph}{得られる追加制約 $M$ と出力 $\Omega $}{21}{}%
+\contentsline {paragraph}{極大変換（mode=max ）}{22}{}%
+\contentsline {chapter}{\numberline {第6章}実行実験}{25}{}%
+\contentsline {section}{\numberline {6.1}実験概要}{25}{}%
+\contentsline {section}{\numberline {6.2}実験環境}{25}{}%
+\contentsline {section}{\numberline {6.3}ベンチマーク}{26}{}%
+\contentsline {section}{\numberline {6.4}CPU時間の比較}{27}{}%
+\contentsline {section}{\numberline {6.5}CNFの変数，節の数とSATソルバー起動回数の比較}{32}{}%
+\contentsline {chapter}{\numberline {第7章}おわりに}{35}{}%

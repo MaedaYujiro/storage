@@ -1,0 +1,455 @@
+\documentclass[twocolumn]{jarticle}
+
+\usepackage{jsaiac}
+\usepackage{color}
+
+\input{macro}
+
+%%
+\title{
+  \jtitle{SAT 符号化を用いた命題論理式の極小・極大モデル計算}
+  \etitle{SAT Encodings Based Method for Computing Minimal and Maximal Models of Propositional Formulas}
+}
+%%英文は以下を使用
+%\title{Style file for manuscripts of JSAI 20XX}
+
+%\jaddress{氏名，所属，住所，電話番号，Fax番号，電子メールアドレスなど}
+\jaddress{前田悠士朗，%
+  名古屋大学大学院情報学研究科，%
+  〒464-8601 名古屋市千種区不老町，%
+  \texttt{yujiro.maeda@nagoya-u.jp}}
+
+\author{%
+  \jname{前田~悠士朗\first}
+  \ename{Yujiro~Maeda}
+  \and
+  \jname{足立~啓一\second}
+  \ename{Keiichi~Adachi}
+  \and
+  \jname{宋~剛秀\first}
+  \ename{Takehide~Soh}
+  \and
+  \jname{番原~睦則\first}
+  \ename{Mutsunori~Banbara}
+  %\and
+  %Given-name Surname\third{}%%英文は左を使用
+}
+
+\affiliate{
+  \jname{\first{}名古屋大学大学院情報学研究科}
+  \ename{Graduate School of Informatics, Nagoya University}\\
+  \jname{\second{}神戸大学}
+  \ename{Kobe University}
+  %\and
+  %\third{}Affiliation \#3 in English%%英文は左を使用
+}
+
+%%
+%\Vol{28}        %% <-- 28th（変更しないでください）
+%\session{0A0-00}%% <-- 講演ID（必須)
+
+\begin{abstract}
+\input{abstract}
+\end{abstract}
+
+%\setcounter{page}{1}
+\def\Style{``jsaiac.sty''}
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em%
+ T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+\def\JBibTeX{\leavevmode\lower .6ex\hbox{J}\kern-0.15em\BibTeX}
+\def\LaTeXe{\LaTeX\kern.15em2$_{\textstyle\varepsilon}$}
+
+\begin{document}
+\maketitle
+
+%%% はじめに %%%
+\section{はじめに}
+\label{chap:introduction}
+
+命題論理式の充足可能性判定問題（SAT問題）とは，与えられた命題論理式を真にする変数割り当て（モデル）が存在するかを判定する問題である．
+近年のSATソルバーの高性能化により，大規模な論理式に対しても実用的な時間でモデルが得られるようになり，様々な分野で推論基盤として用いられている~\cite{DBLP:series/faia/Biere09,jackson2006softwareabstractions,DBLP:conf/ecai/KautzS92,CSC06:TamuraB08,DBLP:journals/constraints/TamuraTKB09}．
+一方で，実際の応用では，単にモデルの存在を判定するだけでなく，モデル集合から代表的な解を抽出することが重要となる．
+
+極小モデル・極大モデルとは，モデル集合に包含関係を導入し，真の変数集合をこれ以上減らせない・増やせないモデルである．
+これらは非単調推論に基づく常識推論の意味論的基盤を成すとともに，極小支配集合や極大独立集合，多目的最適化におけるパレートフロントの計算など，幅広い応用を持つ~\cite{niemela96,soh}．
+既存手法~\cite{koshimura2009minimal}ではSATソルバーを複数回起動してモデルを段階的に縮小・拡大するが，起動回数の増加と極小性・極大性の保証のための充足不能性判定により計算コストが大きい．
+
+そこで本発表では，連言標準形（CNF）に制約を追加するSAT符号化により，SATソルバー1回の起動で1つの極小・極大モデルを得る手法を提案する．
+本発表の貢献は以下の通りである．
+\begin{itemize}
+  \item 極小モデルに対しては各正リテラルに，極大モデルに対しては各負リテラルに着目し，他リテラルで節が充足される場合に当該変数の真偽を定める制約を追加するCNF変換を提案した．
+  \item 提案手法をSATソルバーとRust言語で実装し，極小支配集合問題（MDS）と極大独立集合問題（MIS）の計32問のベンチマークで評価を行った結果，提案手法が既存手法より多くの問題を高速に解くことを確認した．
+\end{itemize}
+
+%%% 準備 %%%
+\section{準備}
+\label{chap:maxmin}
+
+\subsection{SAT問題とCNF}
+\label{sec:defCNF}
+
+命題変数$x$またはその否定$\neg x$を\textbf{リテラル}と呼び，前者を正リテラル，後者を負リテラルと呼ぶ．
+リテラルの選言（論理和）を\textbf{節}，節の連言（論理積）を\textbf{CNF（連言標準形）}と呼ぶ．
+本発表ではSAT問題の入力はCNFで与えられるものとし，CNFを節の集合，節をリテラルの集合とみなす．
+命題変数への真偽値割り当て$I$がCNF $\Phi$を充足するとき，$I$を$\Phi$の\textbf{モデル}と呼ぶ．
+モデルが存在するとき$\Phi$は\textbf{充足可能}，存在しないとき\textbf{充足不能}であるという．
+また，$\top$は恒真，$\bot$は恒偽を表し，CNF $\Phi$の変数集合を$\mathrm{Var}(\Phi)$と書く．
+
+\begin{example}\rm
+\label{ex:CNF}
+CNF $\Phi = (x_1\lor x_2)\land (x_1\lor \neg x_2)\land (x_1 \lor \neg x_3) \land (x_2\lor x_3)$ に対し，
+割り当て$(x_1,x_2,x_3)=(1,0,1),(1,1,0),(1,1,1)$がモデルであり，$\Phi$は充足可能である．
+一方，$\Phi' = \Phi \land (\neg x_1)$は充足不能である．
+\end{example}
+
+\subsection{極小モデルと極大モデル}
+\label{sec:defmaxmin}
+
+モデル$I$を，真となる変数の集合$M=\{x \mid I(x)=1\}$で表す．
+モデル集合に集合の包含関係$\subset$を導入することで，モデル間の大小関係を定義する．
+
+\begin{definition}[極小モデル]\rm
+$\Phi$のモデル$M$が\textbf{極小モデル}であるとは，$M'\subset M$なる$\Phi$のモデル$M'$が存在しないことをいう．
+\end{definition}
+\begin{definition}[極大モデル]\rm
+$\Phi$のモデル$M$が\textbf{極大モデル}であるとは，$M\subset M'$なる$\Phi$のモデル$M'$が存在しないことをいう．
+\end{definition}
+
+\begin{example}\rm
+例\ref{ex:CNF}の$\Phi$のモデルは$\{x_1,x_3\}$，$\{x_1,x_2\}$，$\{x_1,x_2,x_3\}$の3つである．
+$\{x_1,x_3\}$と$\{x_1,x_2\}$はいずれもその真部分集合に$\Phi$のモデルが存在しないため極小モデルであり，$\{x_1,x_2,x_3\}$はこれを真に含む$\Phi$のモデルが存在しないため極大モデルである．
+\end{example}
+
+%%% 既存手法 %%%
+\subsection{SATソルバー複数回起動による極小・極大モデル計算}
+\label{chap:koshimura}
+
+論文\cite{koshimura2009minimal}では，SATソルバーを複数回起動して極小モデルを求める方法（以下，反復起動法）が提案されている．
+CNF $\Phi$が与えられたとき，以下の手順で極小モデルを計算する．
+\begin{enumerate}
+  \item $\Phi$にSATソルバーを起動しモデル$M$を得る．$M$で真となる変数を$x_1,\dots,x_m$，偽となる変数を$y_1,\dots,y_n$とする．
+  \item $F_1 = \neg(x_1 \land \cdots \land x_m)$，$F_2 = \neg y_1 \land \cdots \land \neg y_n$ として，$\Phi' = \Phi \land F_1 \land F_2$にSATソルバーを起動する．
+  \item 充足不能ならば$M$が極小モデルである．充足可能ならば得られたモデルで$M$を更新し，2.に戻る．
+\end{enumerate}
+$F_1$は$M$より真の変数が少ないモデルの探索を，$F_2$は$M$で偽の変数を固定することで包含関係での縮小方向への探索を保証する．
+極大モデルの場合は$F_1 = \neg(\neg y_1 \land \cdots \land \neg y_n)$，$F_2 = x_1 \land \cdots \land x_m$とすることで，拡大方向へ探索する．
+
+%%% 提案手法 %%%
+\section{SAT符号化による極小・極大モデル計算}
+\label{chap:maxcalc}
+
+\begin{figure}[t]
+  \centering
+  \small
+  %% 既存手法
+  \begin{tikzpicture}[
+    node distance=4mm and 3mm,
+    box/.style={draw, rounded corners, minimum height=6mm, minimum width=14mm, align=center, font=\small},
+    io/.style={draw, minimum height=6mm, minimum width=12mm, align=center, font=\small},
+    decision/.style={draw, diamond, aspect=2, inner sep=1pt, align=center, font=\small},
+    arr/.style={->, >=stealth, thick},
+  ]
+    \node[font=\small\bfseries] (title1) {既存手法（反復起動法）};
+    \node[io, below=of title1] (in1) {CNF $\Phi$};
+    \node[box, right=of in1] (sat1) {SAT\\ソルバー};
+    \node[decision, right=8mm of sat1] (check) {充足\\不能?};
+    \node[io, right=of check] (out1) {極小/極大\\モデル};
+    \node[box, below=6mm of sat1] (add) {制約追加\\$F_1,F_2$};
+
+    \draw[arr] (in1) -- (sat1);
+    \draw[arr] (sat1) -- node[above, font=\scriptsize]{$M$} (check);
+    \draw[arr] (check) -- node[above, font=\scriptsize]{Yes} (out1);
+    \draw[arr] (check) -- node[right, font=\scriptsize]{No} (add);
+    \draw[arr] (add) -- (sat1);
+  \end{tikzpicture}
+
+  \vspace{4mm}
+
+  %% 提案手法
+  \begin{tikzpicture}[
+    node distance=4mm and 3mm,
+    box/.style={draw, rounded corners, minimum height=6mm, minimum width=14mm, align=center, font=\small},
+    io/.style={draw, minimum height=6mm, minimum width=12mm, align=center, font=\small},
+    arr/.style={->, >=stealth, thick},
+  ]
+    \node[font=\small\bfseries] (title2) {提案手法（CNF変換）};
+    \node[io, below=of title2] (in2) {CNF $\Phi$};
+    \node[box, right=of in2] (trans) {CNF\\変換};
+    \node[io, right=of trans] (mid2) {$\Omega$};
+    \node[box, right=of mid2] (sat2) {SAT\\ソルバー};
+    \node[io, right=of sat2] (out2) {極小/極大\\モデル};
+
+    \draw[arr] (in2) -- (trans);
+    \draw[arr] (trans) -- (mid2);
+    \draw[arr] (mid2) -- (sat2);
+    \draw[arr] (sat2) -- (out2);
+  \end{tikzpicture}
+  \caption{既存手法と提案手法の処理の流れ}
+  \label{fig:flow}
+\end{figure}
+
+\begin{algorithm}[t]
+\caption{CNF変換アルゴリズム（min/max統一）}
+\label{alg:trans-minmax}
+\begin{algorithmic}[1]
+\Require CNF $\Phi$, mode $\in \{\mathrm{min},\mathrm{max}\}$
+\Ensure  CNF $\Omega$
+\State $V \gets \mathrm{Var}(\Phi)$;\quad $C \gets \top$
+\ForAll{$x \in V$}
+  \State $d_1 \gets \bot$
+  \If{mode $=$ min}
+    $t \gets x$;\quad $h \gets \neg x$
+  \Else\quad $t \gets \neg x$;\quad $h \gets x$
+  \EndIf
+  \ForAll{$c \in \Phi$ \textbf{s.t.} $t \in c$}
+    \State $a \gets$ new variable;\quad $d_2 \gets \bot$
+    \ForAll{$l \in c$ \textbf{s.t.} $l \neq t$}
+      \State $C \gets C \wedge (\neg a \vee \neg l)$;\quad $d_2 \gets d_2 \vee l$
+    \EndFor
+    \State $C \gets C \wedge (d_2 \vee a)$;\quad $d_1 \gets d_1 \vee a$
+  \EndFor
+  \State $C \gets C \wedge (h \vee d_1)$
+\EndFor
+\State \textbf{return} $\Omega \gets \Phi \wedge C$
+\end{algorithmic}
+\end{algorithm}
+
+本節では，CNFに制約を追加することでSATソルバー1回の起動で極小・極大モデルを計算する手法を述べる．
+まず極小モデルの変換を，次に極大モデルの変換を示す．
+さらに，これらの変換をCNFとして実現するためのアルゴリズムを示す．
+
+\subsection{極小モデルのためのCNF変換}
+\label{sec:mintrans}
+
+CNF $\Phi$の各正リテラルに注目し，変数$x$が正リテラルとして現れる全ての節が$x$なしでも充足されるならば$x$を偽にする制約を追加する変換を定義する．
+変換後のCNFを$\Omega_{min} = \Phi \land R_{min}(\Phi)$とする．
+\begin{equation}\label{fom:min}
+\begin{aligned}
+  R_{min}(\Phi) &= \bigwedge_{x \in \mathrm{Var}(\Phi)} \bigl(Cl_{min}(\Phi,x) \to \neg x\bigr) \\
+  Cl_{min}(\Phi,x) &= \bigwedge_{c \in \Phi,\, x \in c} c \setminus \{x\}
+\end{aligned}
+\end{equation}
+すなわち，$x$を含む全ての節が$x$以外のリテラルで充足される場合に$x$を偽にする．$x$が正リテラルとしてどの節にも現れない場合は単位節（リテラル1つからなる節）$\neg x$が追加される．
+
+\subsection{極大モデルのためのCNF変換}
+\label{sec:maxtrans}
+
+極小モデルの変換が正リテラルに注目したのに対し，極大モデルでは負リテラルに注目する．
+できる限り偽となる変数を減らすため，「変数$x$が負リテラルとして現れる全ての節が$\neg x$なしでも充足されるならば，$x$を真にしてよい」という制約を追加する．
+これは極小変換と双対的な関係にあり，正リテラルと負リテラル，真と偽の役割を入れ替えたものである．
+変換後のCNFを$\Omega_{max} = \Phi \land R_{max}(\Phi)$とする．
+\begin{equation}\label{fom:max}
+\begin{aligned}
+  R_{max}(\Phi) &= \bigwedge_{x \in \mathrm{Var}(\Phi)} \bigl(Cl_{max}(\Phi,\neg x) \to x\bigr) \\
+  Cl_{max}(\Phi,\neg x) &= \bigwedge_{c \in \Phi,\, \neg x \in c} c \setminus \{\neg x\}
+\end{aligned}
+\end{equation}
+ここで$Cl_{max}(\Phi,\neg x)$は，$\neg x$を含む全ての節から$\neg x$を除いたものの連言である．
+$Cl_{max}(\Phi,\neg x)$が充足されるとは，$\neg x$を含む全ての節が$\neg x$以外のリテラルで充足されることを意味し，この場合に$x$を真にしても$\Phi$の充足性は保たれる．
+$\neg x$がどの節にも現れない場合は$Cl_{max}(\Phi,\neg x) = \top$となり，単位節$x$が追加される．
+
+\subsection{変換アルゴリズム}
+\label{sec:algo}
+
+式(\ref{fom:min})，(\ref{fom:max})の変換を統一的に実現するアルゴリズムをAlgorithm~\ref{alg:trans-minmax}に示す．
+入力はCNF $\Phi$とmode $\in \{\mathrm{min}, \mathrm{max}\}$であり，出力は変換後のCNF $\Omega$である．
+各変数$x$に対し，modeに応じて注目リテラル$t$と含意先$h$を選ぶ（min: $t{=}x, h{=}\neg x$，max: $t{=}\neg x, h{=}x$）．
+$t$を含む各節について補助変数$a$を導入し，「その節で$t$以外が全て偽」を表す指示変数とする．
+最後に$(h \lor d_1)$を追加し，$h$を偽にするには$d_1$が真であること（$t$に依存する節の存在）を要求する．
+
+\begin{table*}[t]
+  \centering
+  \caption{CNFの変数数・節数およびSATソルバー起動回数の比較}
+  \label{tab:cnf-calls}
+  \begin{tabular}{c|rr|rr|rr|r|rr|rr|rr|r}
+    \hline
+    & \multicolumn{7}{c|}{MDS（極小モデル）} & \multicolumn{7}{c}{MIS（極大モデル）} \\
+    \hline
+    & \multicolumn{2}{c|}{既存 CNF} & \multicolumn{2}{c|}{提案 CNF} & \multicolumn{2}{c|}{起動回数} &
+    & \multicolumn{2}{c|}{既存 CNF} & \multicolumn{2}{c|}{提案 CNF} & \multicolumn{2}{c|}{起動回数} & \\
+    $3{\times}n$ & vars & cls & vars & cls & 既存 & 提案 & \% & vars & cls & vars & cls & 既存 & 提案 & \% \\
+    \hline\hline
+    2  & 6  & 6  & 26  & 60  & 23     & 7      & 30.4 & 6  & 7  & 6  & 13  & 11    & 4     & 36.4 \\
+    4  & 12 & 12 & 58  & 160 & 207    & 53     & 25.6 & 12 & 17 & 12 & 29  & 48    & 18    & 37.5 \\
+    6  & 18 & 18 & 90  & 260 & 1743   & 436    & 25.0 & 18 & 27 & 18 & 45  & 203   & 78    & 38.5 \\
+    8  & 24 & 24 & 122 & 360 & 17406  & 3660   & 21.0 & 24 & 37 & 24 & 61  & 907   & 321   & 35.3 \\
+    10 & 30 & 30 & 154 & 460 & 138754 & 30744  & 22.2 & 30 & 47 & 30 & 77  & 3808  & 1335  & 35.1 \\
+    12 & -- & -- & 186 & 560 & --     & 258251 & --   & 36 & 57 & 36 & 93  & 16127 & 5518  & 34.2 \\
+    13 & -- & -- & --  & --  & --     & --     & --   & 39 & 62 & 39 & 101 & 33281 & 11228 & 33.8 \\
+    15 & -- & -- & --  & --  & --     & --     & --   & -- & -- & 45 & 117 & --    & 46634 & --   \\
+    18 & -- & -- & --  & --  & --     & --     & --   & -- & -- & 54 & 141 & --    & 394286& --   \\
+    \hline
+  \end{tabular}
+\end{table*}
+
+\section{変換の例}
+\label{sec:transex}
+
+\begin{example}[極小モデル変換]\rm
+\label{ex:minPhi}
+$\Phi = (x_1 \lor \neg x_2 \lor x_3) \land (x_2 \lor x_3) \land (x_3 \lor \neg x_4)$ に対する極小変換を以下に示す．
+$\Omega_{min}$のモデルとして極小モデル$\{x_3\}$と$\{x_1,x_2\}$が得られる．
+
+\medskip
+\centering
+\begin{tabular}{c l l}
+  \toprule
+  変数 & $Cl_{min}(\Phi,x)$ & 追加制約 \\
+  \midrule
+  $x_1$ & $\neg x_2 \lor x_3$ & $(\neg x_2 \lor x_3) \to \neg x_1$ \\
+  $x_2$ & $x_3$ & $x_3 \to \neg x_2$ \\
+  $x_3$ & $(x_1 \!\lor\! \neg x_2) \!\land\! x_2 \!\land\! \neg x_4$ & $((x_1 \!\lor\! \neg x_2) \!\land\! x_2 \!\land\! \neg x_4) \!\to\! \neg x_3$ \\
+  $x_4$ & （正リテラルなし） & $\neg x_4$ \\
+  \bottomrule
+\end{tabular}
+\flushleft
+\end{example}
+
+\begin{example}[極大モデル変換]\rm
+\label{ex:maxPhi}
+$\Phi = (\neg x_1 \lor x_2 \lor \neg x_3) \land (\neg x_2 \lor \neg x_3) \land (\neg x_3 \lor x_4)$ に対する極大変換を以下に示す．
+$\Omega_{max}$のモデルとして極大モデル$\{x_2,x_3,x_4\}$と$\{x_1,x_2,x_4\}$が得られる．
+
+\medskip
+\centering
+\begin{tabular}{c l l}
+  \toprule
+  変数 & $Cl_{max}(\Phi,\neg x)$ & 追加制約 \\
+  \midrule
+  $x_1$ & $x_2 \lor \neg x_3$ & $(x_2 \lor \neg x_3) \to x_1$ \\
+  $x_2$ & $\neg x_3$ & $\neg x_3 \to x_2$ \\
+  $x_3$ & $(\neg x_1 \!\lor\! x_2) \!\land\! \neg x_2 \!\land\! x_4$ & $((\neg x_1 \!\lor\! x_2) \!\land\! \neg x_2 \!\land\! x_4) \!\to\! x_3$ \\
+  $x_4$ & （負リテラルなし） & $x_4$ \\
+  \bottomrule
+\end{tabular}
+\flushleft
+\end{example}
+
+%%% 実験 %%%
+\section{実行実験}
+\label{chap:experiment}
+
+\begin{table*}[t]
+  \centering
+  \caption{MDS・MISのCPU時間（秒）と結果数}
+  \label{tab:mds-mis-results}
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \begin{tabular}{c|r|r|r|r}
+      \hline
+      Benchmark & \multicolumn{2}{c|}{MDS（既存）} & \multicolumn{2}{c}{MDS（提案）} \\
+      \hline
+      & time & results & time & results \\
+      \hline\hline
+      grid3$\times$1  & $<$0.0 & 2     & \textcolor{red}{$<$0.0} & 2 \\
+      grid3$\times$2  & $<$0.0 & 7     & \textcolor{red}{$<$0.0} & 7 \\
+      grid3$\times$3  & $<$0.0 & 16    & \textcolor{red}{$<$0.0} & 16 \\
+      grid3$\times$4  & $<$0.0 & 53    & \textcolor{red}{$<$0.0} & 53 \\
+      grid3$\times$5  & 0.01   & 154   & \textcolor{red}{$<$0.0} & 154 \\
+      grid3$\times$6  & 0.15   & 436   & \textcolor{red}{0.01}   & 436 \\
+      grid3$\times$7  & 1.86   & 1268  & \textcolor{red}{0.03}   & 1268 \\
+      grid3$\times$8  & 26.32  & 3660  & \textcolor{red}{0.13}   & 3660 \\
+      grid3$\times$9  & 182.35 & 10610 & \textcolor{red}{0.58}   & 10610 \\
+      grid3$\times$10 & 1361.24& 30744 & \textcolor{red}{3.62}   & 30744 \\
+      grid3$\times$11 & T.O.   & --    & \textcolor{red}{24.84}  & 89079 \\
+      grid3$\times$12 & T.O.   & --    & \textcolor{red}{207.90} & 258251 \\
+      grid3$\times$13 & T.O.   & --    & T.O.   & -- \\
+      \hline
+    \end{tabular}
+  \end{minipage}
+  \hfill
+  \begin{minipage}[t]{0.48\textwidth}
+    \centering
+    \begin{tabular}{c|r|r|r|r}
+      \hline
+      Benchmark & \multicolumn{2}{c|}{MIS（既存）} & \multicolumn{2}{c}{MIS（提案）} \\
+      \hline
+      & time & results & time & results \\
+      \hline\hline
+      grid3$\times$1  & $<$0.0 & 2     & \textcolor{red}{$<$0.0} & 2 \\
+      grid3$\times$2  & $<$0.0 & 4     & \textcolor{red}{$<$0.0} & 4 \\
+      \multicolumn{5}{c}{$\vdots$} \\
+      grid3$\times$11 & 0.36   & 2706  & \textcolor{red}{0.05}   & 2706 \\
+      grid3$\times$12 & 114.72 & 5518  & \textcolor{red}{0.14}   & 5518 \\
+      grid3$\times$13 & 584.70 & 11228 & \textcolor{red}{0.36}   & 11228 \\
+      grid3$\times$14 & T.O.   & --    & \textcolor{red}{1.52}   & 22884 \\
+      grid3$\times$15 & T.O.   & --    & \textcolor{red}{5.26}   & 46634 \\
+      grid3$\times$16 & T.O.   & --    & \textcolor{red}{23.53}  & 94978 \\
+      grid3$\times$17 & T.O.   & --    & \textcolor{red}{110.72} & 193518 \\
+      grid3$\times$18 & T.O.   & --    & \textcolor{red}{756.59} & 394286 \\
+      grid3$\times$19 & T.O.   & --    & T.O.   & -- \\
+      \hline
+    \end{tabular}
+  \end{minipage}
+\end{table*}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{images/mds-plot.png}
+  \caption{MDS のCPU時間と結果数のプロット}
+  \label{img:mds-plot}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.9\linewidth]{images/mis-plot.png}
+  \caption{MIS のCPU時間と結果数のプロット}
+  \label{img:mis-plot}
+\end{figure}
+
+\begin{figure}[t]
+  \centering
+  \begin{minipage}{0.95\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/model_discovery.png}
+    \captionof{figure}{SATソルバー起動に要したCPU時間の比較}
+    \label{img:model-discovery}
+  \end{minipage}
+
+  \vspace{6pt}
+
+  \begin{minipage}{0.95\linewidth}
+    \centering
+    \includegraphics[width=\linewidth]{images/model_times.png}
+    \captionof{figure}{既存手法と提案手法のモデル計算CPU時間推移}
+    \label{img:model-times}
+  \end{minipage}
+\end{figure}
+
+\subsection{実験設定}
+
+提案手法（trans）と既存の反復起動法（basic）~\cite{koshimura2009minimal}の性能を比較するため，極小支配集合問題（MDS）と極大独立集合問題（MIS）を対象に実験を行った．
+ベンチマークには3行$n$列（$n=1,\dots,19$）のGrid graphを用い，全ての極小・極大モデルを列挙するCPU時間を測定した．列挙はモデルが得られるたびにそのモデルを禁止するブロッキング節を追加し再度SATソルバーを起動することで行った．
+Grid graphとは整数格子上の点を頂点とし，上下左右に隣接する点同士を辺で結んだグラフである．
+MDSでは全頂点が支配集合の頂点自身またはその隣接頂点で覆われる極小な頂点集合を，MISでは集合内の頂点同士が隣接しない極大な頂点集合を，それぞれ列挙する．
+実装にはRust言語とSATソルバーCaDiCaL 3.0.0を使用し，制限時間は1問30分とした（Mac mini, Apple M4, 32GB）．
+
+\subsection{結果と考察}
+
+表\ref{tab:mds-mis-results}および図\ref{img:mds-plot}，\ref{img:mis-plot}に結果を示す．
+MDSでは，basicが$3\times10$まで解けたのに対し，transは$3\times12$まで解けた．$3\times10$ではbasicが1361.24秒に対しtransは3.62秒であり大幅に高速化された．
+MISでは，basicが$3\times13$まで解けたのに対し，transは$3\times18$まで解けた．$3\times13$ではbasicが584.70秒に対しtransは0.36秒であった．
+
+図\ref{img:model-discovery}にSATソルバー起動CPU時間の内訳，図\ref{img:model-times}に各モデル計算のCPU時間推移を示す．
+既存手法では頻繁なソルバー起動がオーバーヘッドとなるのに対し，提案手法では起動回数が大幅に抑制され，モデル数増加に伴う計算時間も安定している．
+
+表\ref{tab:cnf-calls}にCNFサイズとSATソルバー起動回数を示す．
+提案手法では変換により補助変数が導入されCNFサイズは増加するが，起動回数は解の数と一致し大幅に削減される．
+例えば$3\times8$のMDSで既存手法は17406回起動するのに対し，提案手法は3660回（約21\%）である．
+MISの方がMDSより性能差が大きい要因として，MDSでは問題のCNF符号化において補助変数が多く導入されCNFが複雑化する点が挙げられる．
+
+%%% おわりに %%%
+\section{おわりに}
+\label{chap:conclusion}
+
+本発表では，SAT符号化に基づくCNF変換により，SATソルバー1回の起動で1つの極小・極大モデルを得る手法を提案した．
+極小モデルでは各正リテラルに，極大モデルでは各負リテラルに着目し，他リテラルで節が充足される場合に当該変数の真偽を定める制約を追加するCNF変換を定式化・実装した．
+Grid graphに基づくベンチマーク実験の結果，MDS・MISのいずれにおいても提案手法が既存手法より解ける問題サイズの拡大とCPU時間の大幅な短縮を達成した．
+
+今後の課題として，グラフ問題以外の問題領域への適用検証，変換に伴う補助変数・節の増加の効率化，および特定の変数集合のみを極小化・極大化する部分集合最適化への拡張が挙げられる．
+
+\bibliographystyle{jsai} % 参考文献スタイル
+\bibliography{bachelor,ijcai25,aisat}    % 参考文献リスト
+%%
+
+\end{document}

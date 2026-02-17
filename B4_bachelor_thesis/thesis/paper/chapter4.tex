@@ -1,0 +1,338 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\chapter{SAT符号化を用いたSATソルバー1回起動による極小・極大モデル計算方法} \label{chap:maxcalc}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+\ref{chap:koshimura}章では，SATソルバーを複数回起動することによって極小・極大モデルを計算する方法を紹介した.ただ，SATソルバーを複数回起動するのは手間がかかってしまう.~論文\cite{adachi2023}では，SAT問題に符号化を施したCNFに変換を施して，SATソルバーを1回起動することで，極小モデルを計算する方法が提案されたが，計算方法の実装や評価は示されていなかった.そこで，本論文では，SATソルバー1回の起動で極大モデルを計算できるようなCNFへの変換方法を提案し，極小モデルの計算方法とともに実装，評価する.また，本章ではSAT問題に符号化を施したCNFに対して変換を施し，SATソルバーを1回起動することで，極小・極大モデルを計算できる変換方法について説明する.
+\section{SATソルバー1回起動による極小モデル計算の先行研究}
+\label{sec:mintrans}
+\paragraph{極小モデル計算のためのCNF変換方法}
+\label{para:mintrans}
+
+本節では，論文\cite{adachi2023}で提案された，SAT問題に符号化を施したCNFの正リテラルに注目し，できる限り真となる変数を減らしたいという動機のもとCNFに新たな制約を追加し，SATソルバー1回起動によって極小モデルを計算する手法について説明する.この計算手法では，ある節中の他の変数で節が満たされている時，その変数を偽にするという制約を追加し，極小モデルを求める．
+\paragraph{CNFの変換式}
+\label{para:minform}
+
+与えられたCNFを$\Phi $，変換後のCNFを$\Omega _{min} $ とすると，提案変換は，$\Phi$に以下のような制約$M_{min}(\Phi )$ を追加し，$\Omega _{min} = \Phi \land M_{min}(\Phi )$ とするものである.
+\begin{formula}
+ \label{fom:min}
+\begin{align*}
+  &M_{min}(\Phi) \equiv \bigwedge_{x \in Var(\Phi)} Cl_{min}(\Phi,x) \rightarrow \neg x\\
+  &Cl_{min}(\Phi,x) \equiv \bigwedge_{c \in \Phi,x \in c}c \backslash \{x\}\\
+\end{align*}
+\end{formula}
+ここで，$Cl_{min}(\Phi,x)$は，変数$x$が正リテラルとして含まれる全ての節から$x$を除いたものの連言であり，$M_{min}(\Phi )$は全ての変数$x$において，$Cl_{min}(\Phi,x)$が満たされるならば，$x$を偽とするという制約の連言である.
+\begin{example}\rm
+ 以下のようなCNF式$\Phi$が与えられているとする.
+ \begin{center}
+  $\Phi ~=~ (\neg x_1 \lor \neg x_2 \lor \neg x_3) \land (x_1 \lor \neg x_2) \land (x_1 \lor x_2 \lor \neg x_3)$
+ \end{center}
+ このとき，$Cl_{min}(\Phi,x_1)$は，各節から正リテラルとして含まれる変数$x_1$を除いたものの連言であるので，以下のようになる.
+ \begin{center}
+  $Cl_{min}(\Phi , x_1)~=~\neg x_2 \land (x_2 \lor \neg x_3)$
+ \end{center}
+ すると，$M_{min}(\Phi )$により，$Cl_{min}(\Phi,x_1)$が満たされるならば，$x_1$を偽とするという以下の制約が追加される.
+ \begin{center}
+  $(\neg x_2 \land (x_2 \lor \neg x_3))\to \neg x_1$
+ \end{center}
+この制約は，$(x_2,x_3)~=~(0,0)$の時，$x_1$は偽になるということを意味する.
+\end{example}
+
+
+\section{SATソルバー1回起動による極大モデル計算方法}
+\label{sec:maxtrans}
+\paragraph{極大モデル計算のためのCNF変換方法}
+\label{para:maxtrans}
+
+\ref{sec:mintrans}節では，SAT問題に符号化を施したCNFの正リテラルに注目し，できる限り真となる変数を減らしたいという動機のもとCNFに新たな制約を追加し，極小モデルを計算した.本節では，SAT問題に符号化を施したCNFの負リテラルに注目し，できる限り偽となる変数を減らしたいという動機のもとCNFに新たな制約を追加し，極大モデルを計算する方法を提案する.ある節中の他の変数で節が満たされている時，その変数を真にするというのが変換によって追加される制約の意図である．
+
+\paragraph{CNFの変換式}
+\label{para:maxform}
+
+与えられたCNFを$\Phi$，変換後のCNFを$\Omega _{max} $ とすると，提案変換は，$\Phi$に以下のような制約$M_{max}(\Phi )$ を追加し，$\Omega _{max} = \Phi \land M_{max}(\Phi )$ とするものである.
+\begin{formula}
+ \label{fom:max}
+\begin{align*}
+  &M_{max}(\Phi) \equiv \bigwedge_{x \in Var(\Phi)} Cl_{max}(\Phi,\neg x) \rightarrow x\\
+  &Cl_{max}(\Phi,\neg x) \equiv \bigwedge_{c \in \Phi,\neg x \in c}c \backslash \{\neg x\}\\
+\end{align*}
+\end{formula}
+ここで，$Cl_{max}(\Phi,\neg x)$は，変数$x$が負リテラルとして含まれる全ての節から$\neg x$を除いたものの連言であり，$M_{max}(\Phi )$は全ての変数$x$において，$Cl_{max}(\Phi,\neg x)$が満たされるならば，$x$を真とするという制約の連言である.
+\begin{example}\rm
+ 以下のようなCNF式$\Phi$が与えられているとする.
+ \begin{center}
+  $\Phi ~=~ (x_1 \lor x_2 \lor x_3) \land (\neg x_1 \lor x_2) \land (\neg x_1 \lor \neg x_2 \lor x_3)$
+ \end{center}
+ このとき，$Cl_{max}(\Phi,\neg x_1)$は，各節から負リテラルとして含まれる変数$x_1$を除いたものの連言であるので，以下のようになる.
+ \begin{center}
+  $Cl_{max}(\Phi , \neg x_1)~=~ x_2 \land (\neg x_2 \lor x_3)$
+ \end{center}
+ すると，$M_{max}(\Phi )$により，$Cl_{max}(\Phi,\neg x_1)$が満たされるならば,$x_1$を真とするという以下の制約が追加される.
+ \begin{center}
+  $(x_2 \land (\neg x_2 \lor x_3))\to x_1$
+ \end{center}
+この制約は，$(x_2,x_3)~=~(1,1)$の時，$x_1$は真になるということを意味する.
+\end{example}
+
+\paragraph{極小モデル，極大モデル計算の例と計算過程}
+\label{para:mincalc}
+
+\begin{example}[極小モデル計算の例]\rm
+\label{ex:minPhi}
+ 以下のようなCNF式$\Phi$が与えられているとする.
+ \begin{center}
+  $\Phi ~=~ (x_1 \lor \neg x_2 \lor x_3) \land (x_2 \lor x_3) \land (x_3 \lor \neg x_4)$
+ \end{center}
+ このCNF$\Phi$のモデルは以下のようになる.
+ \begin{center}
+  $(x_1,x_2,x_3,x_4)=(1,0,1,0)$，$(1,1,1,0)$，$(0,0,1,0)$，$(0,1,1,0)$，$(1,0,1,1)$，$(0,0,1,1)$，$(1,1,1,1)$，$(0,1,1,1)$，$(1,1,0,0)$
+ \end{center}
+ このCNF$\Phi$に式\ref{fom:min}に沿って変換を施すと，表\ref{tab:Phimin}のような制約が追加され，最終的に$(x_1,x_2,x_3,x_4)~=~(0,0,1,0),(1,1,0,0)$という極小モデルが計算でき，これは$\Phi$の極小モデルに一致する．\\
+
+\renewcommand{\arraystretch}{1.2}
+\begin{table}[H]
+  \centering
+  \small
+  \setlength{\tabcolsep}{3pt}
+  \caption{CNF$\Phi$の極小変換}
+  \label{tab:Phimin}
+
+  \begin{tabularx}{\linewidth}{c | >{\raggedright\arraybackslash}X
+                                  >{\raggedright\arraybackslash}X
+                                  >{\raggedright\arraybackslash}X}
+    \toprule
+    注目変数 & 追加する節（制約） & 制限されるモデル & 極小モデル候補\\
+    \midrule
+
+    $x_1$
+    & $(\neg x_2 \lor x_3)\to \neg x_1$
+    & $\begin{aligned}
+        &(1,0,1,0),(1,1,1,0),\\
+        &(1,0,1,1),(1,1,1,1)
+       \end{aligned}$
+    & $\begin{aligned}
+        &(0,0,1,0),(0,1,1,0),\\
+        &(0,0,1,1),(0,1,1,1),\\
+        &(1,1,0,0)
+       \end{aligned}$
+    \\
+    \hline
+
+    $x_2$
+    & $x_3 \to \neg x_2$
+    & $\begin{aligned}
+        &(1,1,1,0),(0,1,1,0),\\
+        &(1,1,1,1),(0,1,1,1)
+       \end{aligned}$
+    & $\begin{aligned}
+        &(0,0,1,0),(0,0,1,1),\\
+        &(1,1,0,0)
+       \end{aligned}$
+    \\
+    \hline
+
+    $x_3$
+    & $\begin{aligned}
+        &{\scriptstyle((x_1 \lor \neg x_2)\land x_2 \land \neg x_4)}\\
+        &\to \neg x_3
+       \end{aligned}$
+    & $(1,1,1,0)$
+    & $\begin{aligned}
+        &(0,0,1,0),(0,0,1,1),\\
+        &(1,1,0,0)
+       \end{aligned}$
+    \\
+    \hline
+
+    $x_4$
+    & $\top \to \neg x_4\ (\equiv \neg x_4)$
+    & $\begin{aligned}
+        &(1,0,1,1),(0,0,1,1),\\
+        &(1,1,1,1),(0,1,1,1)
+       \end{aligned}$
+    & $\begin{aligned}
+        &(0,0,1,0),(1,1,0,0)
+       \end{aligned}$
+    \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+ % \renewcommand{\arraystretch}{1.4}
+ %  \begin{table}[H]
+ %  \centering
+ %   \caption{CNF$\Phi$の極小変換}
+ %   \label{tab:Phimin}
+ %   \begin{tabular}{c | >{\raggedright\arraybackslash}p{4cm}
+ %                   >{\raggedright\arraybackslash}p{4cm}
+ %                   >{\raggedright\arraybackslash}p{5.3cm}}
+ %    \toprule
+ %    注目変数 &  追加する節（制約） & 制限されるモデル & 極小モデル候補\\ 
+ %    \midrule
+ %     $x_1$ & $(\neg x_2 \lor x_3) \to \neg x_1$ 
+ %       & $
+ %       \begin{aligned}
+ %        &(1,0,1,0),(1,1,1,0),\\
+ %        &(1,0,1,1),(1,1,1,1) 
+ %       \end{aligned}$
+ %       & $
+ %        \begin{aligned}
+ % 	&(0,0,1,0),(0,1,1,0),\\
+ %        &(0,0,1,1),(0,1,1,1),(1,1,0,0)
+ % 	\end{aligned}$ \\
+ %     \hline
+ %     $x_2$ & $x_3 \to \neg x_2$ 
+ %       & $
+ %        \begin{aligned}
+ % 	 &(1,1,1,0),(0,1,1,0),\\
+ %         &(1,1,1,1),(0,1,1,1)
+ % 	\end{aligned}$
+ %       & $
+ %       \begin{aligned}
+ % 	&(0,0,1,0),(0,0,1,1),\\
+ %        &(1,1,0,0)
+ %       \end{aligned}$ \\
+ %     \hline
+ %     $x_3$ & $((x_1 \lor \neg x_2)\land x_2 \land \neg x_4) \to \neg x_3$ 
+ %       & $(1,1,1,0)$ 
+ %       & $
+ %        \begin{aligned}
+ % 	 &(0,0,1,0),(0,0,1,1),\\
+ %         &(1,1,0,0)
+ % 	\end{aligned}$ \\
+ %     \hline
+ %     $x_4$ & $\top \to \neg x_4~~(\equiv \neg x_4)$ 
+ %       & $
+ %        \begin{aligned}
+ % 	 &(1,0,1,1),(0,0,1,1),\\
+ %         &(1,1,1,1),(0,1,1,1), 
+ % 	\end{aligned}$ 
+ %       & $(0,0,1,0),(1,1,0,0)$\\
+ %    \bottomrule
+ %   \end{tabular}
+ % \end{table}
+表\ref{tab:Phimin}で行われた極小モデル計算をさらに詳しく解説する.まず変数$x_1$に注目すると，1つ目の節で正リテラルとして出現しているため，変数$x_1$以外の変数で他の節が真である時，変数$x_1$が偽となる制約$(\neg x_2 \wedge x_3) \rightarrow \neg x_1$を追加する．次に変数$x_2$に注目すると，2つ目の節で正リテラルとして出現しているため，変数$x_2$以外の変数で他の節が真である時，変数$x_2$が偽となる制約$x_3 \rightarrow \neg x_2$を追加する．次に変数$x_3$に注目すると，すべての節で正リテラルとして出現している．このとき，全ての節において，変数$x_3$以外の変数で節が真である時，変数$x_3$が偽となる制約$((x_1 \lor \neg x_2)\land x_2 \land \neg x_4) \to \neg x_3$を追加する．次に変数$x_4$に注目すると，変数$x_4$を正リテラルとして含む節は存在しない．すなわち，$x_4$が偽であっても全ての節が充足されないことはないため，単位節$\neg x_4$を追加する．\\
+このようにして，CNFに変換を加え，新たな制約を加えることで極小モデルを計算することができる.
+\end{example}
+
+\begin{example}[極大モデル計算の例]\rm
+\label{ex:Phimax}
+ 以下のようなCNF式$\Phi$が与えられているとする.
+ \begin{center}
+  $\Phi ~=~ (\neg x_1 \lor x_2 \lor \neg x_3) \land (\neg x_2 \lor \neg x_3) \land (\neg x_3 \lor x_4)$
+ \end{center}
+ このCNF$\Phi$のモデルは以下のようになる.
+ \begin{center}
+  $(x_1,x_2,x_3,x_4)=(0,0,0,0)$，$(0,0,0,1)$，$(0,0,1,1)$，$(0,1,0,0)$，\\
+$(0,1,0,1)$，$(1,0,0,0)$，$(1,0,0,1)$，$(1,1,0,0)$，$(1,1,0,1)$
+ \end{center}
+ このCNF$\Phi$に式\ref{fom:max}に沿って変換を施すと，表\ref{tab:Phimax}のような制約が追加され，最終的に$(x_1,x_2,x_3,x_4)~=~(0,0,1,1),(1,1,0,1)$という極大モデルが計算でき，これらは$\Phi$の極大モデルに一致する．\\
+
+\renewcommand{\arraystretch}{1.2}
+\begin{table}[H]
+  \centering
+  \small % ここで全体を少し小さく
+  \setlength{\tabcolsep}{3pt} % 列間を詰める（必要なら2ptまで）
+  \caption{CNF$\Phi$の極大変換}
+  \label{tab:Phimax}
+
+  % 全体幅を \linewidth に固定
+  \begin{tabularx}{\linewidth}{c | >{\raggedright\arraybackslash}X
+                                  >{\raggedright\arraybackslash}X
+                                  >{\raggedright\arraybackslash}X}
+    \toprule
+    注目変数 & 追加する節（制約） & 制限されるモデル & 極大モデル候補 \\
+    \midrule
+
+    $x_1$
+    & $(x_2 \lor \neg x_3)\to x_1$
+    & $\begin{aligned}
+        &(0,0,0,0),(0,0,0,1),\\
+        &(0,1,0,0),(0,1,0,1)
+       \end{aligned}$
+    & $\begin{aligned}
+        &(0,0,1,1),(1,0,0,0),\\
+        &(1,0,0,1),(1,1,0,0),\\
+        &(1,1,0,1)
+       \end{aligned}$
+    \\
+    \hline
+
+    $x_2$
+    & $\neg x_3 \to x_2$
+    & $\begin{aligned}
+        &(0,0,0,0),(0,0,0,1),\\
+        &(1,0,0,0),(1,0,0,1)
+       \end{aligned}$
+    & $\begin{aligned}
+        &(0,0,1,1),(1,1,0,0),\\
+        &(1,1,0,1)
+       \end{aligned}$
+    \\
+    \hline
+
+    $x_3$
+    % 長い式はセル内で明示的に改行
+    & $\begin{aligned}
+        &{\scriptstyle ((\neg x_1 \lor x_2)\land \neg x_2 \land x_4)}\\
+        &\to x_3
+       \end{aligned}$
+    & $(0,0,0,1)$
+    & $\begin{aligned}
+        &(0,0,1,1),(1,1,0,0),\\
+        &(1,1,0,1)
+       \end{aligned}$
+    \\
+    \hline
+
+    $x_4$
+    & $\top \to x_4\ (\equiv x_4)$
+    & $\begin{aligned}
+        &(0,0,0,0),(0,1,0,0),\\
+        &(1,0,0,0),(1,1,0,0)
+       \end{aligned}$
+    & $(0,0,1,1),(1,1,0,1)$
+    \\
+    \bottomrule
+  \end{tabularx}
+\end{table}
+
+ % \renewcommand{\arraystretch}{1.4}
+ %  \begin{table}[H]
+ %  \centering
+ %   \caption{CNF$\Phi$の極大変換}
+ %   \label{tab:Phimax}
+ %   \begin{tabular}{c | >{\raggedright\arraybackslash}p{4cm}
+ %                   >{\raggedright\arraybackslash}p{4cm}
+ %                   >{\raggedright\arraybackslash}p{5.3cm}}
+ %    \toprule
+ %    注目変数 &  追加する節（制約） & 制限されるモデル & 極大モデル候補\\ 
+ %    \midrule
+ %     $x_1$ & $(x_2 \lor \neg x_3) \to x_1$ 
+ %       & $
+ %       \begin{aligned}
+ %        &(0,0,0,0),(0,0,0,1),\\
+ %        &(0,1,0,0),(0,1,0,1) 
+ %       \end{aligned} $
+ %       &$(1,0,0,0),(1,0,0,1),(1,1,0,1)$\\
+ %     \hline
+ %     $x_2$ & $\neg x_3 \to x_2$ 
+ %       & $
+ %        \begin{aligned}
+ % 	 &(0,0,0,0),(0,0,0,1),\\
+ %         &(1,0,0,0),(1,0,0,1)
+ % 	\end{aligned} $
+ %       &(1,1,0,1)\\
+ %     \hline
+ %     $x_3$ & $((\neg x_1 \lor x_2)\land \neg x_2 \land x_4) \to x_3$ 
+ %       & $(0,0,0,1)$ 
+ %       & $(1,1,0,1)$\\
+ %     \hline
+ %     $x_4$ & $\top \to x_4~~(\equiv x_4)$ 
+ %       &$(0,0,0,0),(0,1,0,0)$
+ %       &$(1,1,0,1)$\\
+ %    \bottomrule
+ %   \end{tabular}
+ % \end{table}
+表\ref{tab:Phimax}で行われた極大モデル計算をさらに詳しく解説する.まず変数$x_1$に注目すると，1つ目の節で負リテラルとして出現しているため，変数$x_1$以外の変数で他の節が真である時，変数$x_1$が真となる制約$(x_2 \wedge \neg x_3) \rightarrow x_1$を追加する．次に変数$x_2$に注目すると，2つ目の節で負リテラルとして出現しているため，変数$x_2$以外の変数で他の節が真である時，変数$x_2$が真となる制約$\neg x_3 \rightarrow x_2$を追加する．次に変数$x_3$に注目すると，すべての節で負リテラルとして出現している．このとき，全ての節において，変数$x_3$以外の変数で節が真である時，変数$x_3$が真となる制約$((\neg x_1 \lor x_2)\land \neg x_2 \land x_4) \to x_3$を追加する．次に変数$x_4$に注目すると，変数$x_4$を負リテラルとして含む節は存在しない．すなわち，$x_4$が真であっても全ての節が充足されないことはないため，単位節$x_4$を追加する．\\
+このようにして，CNFに変換を加え，新たな制約を加えることで極大モデルを計算することができる.
+\end{example}

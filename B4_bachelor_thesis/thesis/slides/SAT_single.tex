@@ -1,0 +1,24 @@
+\begin{tikzpicture}[
+  >=Stealth,
+  every node/.style={transform shape},
+  node distance=10mm and 22mm,
+  box/.style={
+    draw, rounded corners=8pt,
+    minimum width=24mm,
+    minimum height=7mm,
+    align=center
+  },
+  lbl/.style={font=\footnotesize, align=center} % ← これを追加
+]
+  \node[box] (prob) {問題};
+  \node[box, right=20mm of prob] (sat) {SAT問題};
+  \node[box, right=20mm of sat] (satplus) {SAT問題+};
+  \node[box, below=20mm of satplus] (mmin) {SAT問題の\\極大モデル};
+  \node[box, left=64mm of mmin] (ans) {問題の\\極大解など};
+
+  \draw[->] (prob.east) -- node[midway, above, lbl]{SAT符号化} (sat.west);
+  \draw[->] (sat.east) -- node[midway, above, lbl]{\textcolor{red}{提案変換}} (satplus.west);
+  \draw[->] (satplus.south) -- node[midway, left, lbl]{SATソルバー\\一回起動} (mmin.north); % ← OK になる
+  \draw[->] (mmin.west) -- node[midway, above, lbl]{復号化} (ans.east);
+  \draw[->, dashed] (prob.south) -- (ans.north);
+\end{tikzpicture}

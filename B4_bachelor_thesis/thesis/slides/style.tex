@@ -1,0 +1,137 @@
+\definecolor{teal}{rgb}{0.0,0.6,0.6}
+\definecolor{bluebluecyan}{rgb}{0,.6,0.8}
+\definecolor{colortitle}{rgb}{0.0,0.5,0.5}
+
+\colorlet{couleurtheme}{teal}  % Couleur principale du thème
+\colorlet{couleurcit}{gray}  % Couleur des citations
+\colorlet{couleurex}{gray}  % Couleur des exemples
+\colorlet{couleurredex}{red}  % Couleur des exemples
+\colorlet{couleurliens}{darkblue}  % Couleur des liens
+
+% \usetheme{Pittsburgh}   % Thème général
+% \usefonttheme{default}  % Thème de polices
+% \setbeamertemplate{navigation symbols}{}  % Pas de menu de navigation
+%\setbeamertemplate{itemize item}[x]   % Puces des listes
+
+% \usecolortheme[named=couleurtheme]{structure}    % Couleur de la structure : titres et puces
+%\setbeamercolor{normal text}{bg=black,fg=white}  % Couleur du texte
+% \setbeamercolor{item}{fg=couleurtheme}           % Couleur des puces
+%\setbeamercolor{item projected}{fg=black}        % Couleur des recouvrements
+%\setbeamercolor{alerted text}{fg=yellow}         % ?
+% \setbeamerfont{frametitle}{size=\Large}  % Police des titres
+
+
+% Flèche grise
+\newcommand{\f}{\textcolor{couleurtheme}{\textbf{$\rightarrow$\ }}}
+\newcommand{\F}{\textcolor{couleurtheme}{\textbf{$\Rightarrow$\ }}}
+
+% Environnement liste avec flèches
+\newenvironment{fleches}{%
+  \begin{list}{}{%
+      \setlength{\labelwidth}{1em}% largeur de la boîte englobant le label
+      \setlength{\labelsep}{0pt}% espace entre paragraphe et l’étiquette
+      %\setlength{\itemsep}{1pt}
+      %\setlength{\leftmargin}{\labelwidth+\labelsep}% marge de gauche
+      \renewcommand{\makelabel}{\f}%
+    }}{\end{list}}
+
+% Liste sans puce
+\newenvironment{liste}{%
+  \begin{list}{}{%
+      \setlength{\labelwidth}{0em}% largeur de la boîte englobant le label
+      \setlength{\labelsep}{0pt}% espace entre paragraphe et l’étiquette
+      \setlength{\leftmargin}{0em}% marge de gauche
+      %\renewcommand{\makelabel}{\f}%
+    }}{\end{list}}
+
+% Style des exemples
+\newcommand{\ex}[1]{\textcolor{couleurex}{#1}}
+\newcommand{\qex}[1]{\quad \ex{#1}}
+\newcommand{\rex}[1]{\hfill \ex{#1}}
+\newcommand{\redex}[1]{\textcolor{couleurredex}{#1}}
+
+\newcommand{\lien}[1]{\textcolor{couleurliens}{\underline{\url{#1}}}}
+
+%\newcommand{\console}[1]{\textcolor{darkgray}{#1}}
+
+% Style des citations
+\newcommand{\tscite}[1]{\textcolor{couleurcit}{#1}}
+\newcommand{\tcite}[1]{\tscite{[#1]}}
+\newcommand{\tcitebullet}{~~$\textcolor{couleurtheme}{\bullet}$~}
+
+
+
+% Style de texte mis en valeur
+\newcommand{\tval}[1]{\textbf{#1}}
+
+% Un vrai symbole pour l'ensemble vide
+\renewcommand{\emptyset}{\varnothing}
+
+% Pour définir la conférence et son nom court
+%\newcommand{\conference}[2]{\def\theconference{#2}
+% \def\insertshortconference{\ifthenelse{\equal{#1}{-}}{#2}{\ifthenelse{\equal{#1}{}}{#2}{#1}}}}
+
+% \setbeamertemplate{footline}{\color{couleurtheme}%
+% \scriptsize
+% \quad\strut%
+% \insertauthor%
+% \hfill%
+% \insertframenumber/\inserttotalframenumber%
+% \hfill%
+% \insertshortconference{} --- \thedate\quad\strut
+% }
+
+
+\newcommand{\headersep}{$\circ$} % \bullet \triangleright
+
+% \setbeamertemplate{headline}{\color{couleurtheme}%
+%   \vskip0.3em%
+%   \quad\strut%
+%   {\scriptsize\color{black}%
+%     % Gris si une section existe
+%     \ifthenelse{\equal{\thesection}{0}}{}{%
+%       \ifthenelse{\equal{\lastsection}{x}}{}{%
+%         \color{couleurtheme}%
+%       }}%
+%     \insertshorttitle
+%     \ifthenelse{\equal{\thesection}{0}}{}{%
+%       \ifthenelse{\equal{\lastsection}{x}}{}{%
+%         ~\headersep{} %
+%         % Gris si une sous-section existe
+%         \ifthenelse{\equal{\thesubsection}{0}}{\color{black}}{%
+%           \ifthenelse{\equal{\lastsubsection}{x}}{\color{black}}{%
+%             \color{couleurtheme}%
+%           }}%
+%         \insertsectionhead%
+%         %
+%         \ifthenelse{\equal{\thesubsection}{0}}{}{%
+%           \ifthenelse{\equal{\lastsubsection}{x}}{}{%
+%             ~\headersep{} \color{black}\insertsubsectionhead%
+%             %
+%           }}}}}%
+%   \vskip-5ex%
+% }
+
+\def \scaleex {0.85}
+\def \scaleminiex {0.6}
+\def \scaleinf {0.6}
+
+\colorlet{colorb}{blue}
+\colorlet{colora1}{yellow}
+\colorlet{colora0}{green}
+\colorlet{colora1font}{darkyellow}
+\colorlet{colora0font}{darkgreen}
+
+\colorlet{exanswer}{blue}
+\colorlet{colorgray}{lightgray}
+
+%\definecolor{colortitle}{rgb}{1,0.854,0.725}
+%\definecolor{colortitle}{rgb}{0.333,0.101,0.545}
+\definecolor{colortitle}{rgb}{0,0.6,0.6}
+
+%255-218-185
+%85;26;139
+%104;34;139
+%\colorlet{colortitle}{bluebluecyan!50}
+
+%\setbeamertemplate{blocks}[default]

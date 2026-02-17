@@ -1,0 +1,128 @@
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% その他
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\usepackage[linesnumbered,ruled,vlined]{algorithm2e}
+\usepackage{stmaryrd}
+\newcommand{\scop}{\textsf{sCOP}}
+\newcommand{\sugar}{\textsf{Sugar}}
+\newcommand{\dietsugar}{\textsf{Diet-Sugar}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% latex の一般的なパッケージの導入
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{alltt}
+\usepackage{comment}
+\usepackage{amssymb}
+\usepackage{amsmath}
+% \usepackage{amsthm}
+\usepackage{multirow}
+\usepackage{array}
+\usepackage{times}
+\usepackage{bm}
+\usepackage{pifont}
+\usepackage{tabularx}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% tikz 関係の設定
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{tikz}
+\usetikzlibrary{shapes,arrows,calc,arrows.meta,}
+\tikzstyle{block}=[draw opacity=0.7,line width=1.4cm]
+\usetikzlibrary{patterns}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% フォント関係の設定
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\familydefault}{\sfdefault}
+\usefonttheme[onlymath]{serif}
+\usefonttheme{structurebold}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Beamer 関係の設定
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Boadilla}
+\usecolortheme{orchid}
+\usecolortheme{whale}
+% \setbeamerfont{block title}{size={}}
+
+% フッターの設定
+\setbeamertemplate{footline}{}
+\setbeamertemplate{footline}[frame number]{}
+\setbeamertemplate{navigation symbols}{}
+
+% 色の設定
+\definecolor{nColor1}{rgb}{0.96,0.85,0.87}
+\definecolor{grays}{rgb}{0.9,0.9,0.9}
+
+% バックアップスライドをカウントしない
+\usepackage{appendixnumberbeamer}
+
+% その他1
+\newcommand{\vr}{\vrule}
+\newcommand{\en}{\vrule depth 0.4pt \vrule height 0em width 0.5em depth 0.4pt}
+\newtheorem{property}{Property}
+\newtheorem{proposition}{Proposition}
+\usepackage{colortbl}
+\newcommand{\OK}{\mbox{\textcolor{green}{\Pisymbol{pzd}{52}}}}
+\newcommand{\KO}{\mbox{\textcolor{red}{\Pisymbol{pzd}{56}}}}
+\usepackage{ulem}
+\newcommand{\ctext}[1]{\raise0.2ex\hbox{\textcircled{\scriptsize{#1}}}}
+
+% その他2
+\newcommand{\weblink}[1]{\href{#1}{\beamergotobutton{web}}}
+\newcommand{\latex}[1]{#1}
+\newcommand{\st}[1]{\structure{#1}}
+\newcommand{\stt}[1]{\structure{\texttt{#1}}}
+\newcommand{\at}[1]{\alert{\texttt{#1}}}
+\newcommand{\al}[1]{\alert{#1}}
+
+% hypterref 関係
+%\usepackage[dvipdfm,bookmarks=false,colorlinks,linkcolor=blue,urlcolor=blue]{hyperref}
+%\usepackage[dvipdfm,bookmarks=false,bookmarksnumbered=true,bookmarkstype=toc,colorlinks,linkcolor=blue,urlcolor=blue]{hyperref}
+% \usepackage[dvipdfm,bookmarks=true,bookmarksnumbered=true,bookmarkstype=toc,colorlinks,linkcolor=blu%e,urlcolor=blue]{hyperref}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% 数学記号関係
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\mvec}[1]{\mbox{\boldmath $#1$}}
+% \newcommand{\BM}[1]{\mbox{\boldmath $#1$}}
+\newcommand{\BM}[1]{\alpha}
+\newcommand{\vex}{\mvec{x}}
+\newcommand{\nat}{\mathbb{Z}}
+\newcommand{\nyoro}{~}
+\newcommand{\FV}[2]{#1(#2)}
+\newcommand{\Const}{\bm{C}}
+%\newcommand{\Dom}{\mathit{Dom}}
+\newcommand{\Dom}{\mathit{D}}
+% \newcommand{\PO}[2]{p_{#1,#2}}
+\newcommand{\PO}[2]{p_{#1 \ge #2}}
+
+\newcommand{\moVar}{\overrightarrow{o}}
+\newcommand{\Ps}[1]{\Pss(#1)}
+\newcommand{\Pss}{\delta}
+\newcommand{\lb}{\textit{lb}}
+\newcommand{\ub}{\textit{ub}}
+\newcommand{\dd}{\mathop{..}}
+\newcommand{\CSP}[1]{\mbox{$\mbox{CSP}(#1)$}}
+%\newcommand{\MO}{\mathcal{M}}
+\newcommand{\MO}{\Omega}
+\newcommand{\FS}{\mathcal{X}}
+\newcommand{\NDS}{\mathcal{Y}}
+
+\newcommand{\Fin}{{\cal F}in}
+\newcommand{\Sum}[2]{\textstyle\sum_{i=#1}^{#2}a_i x_i}
+
+\newcommand{\PFS}{PF Size}
+
+\newcommand{\sname}{\texttt{sucre}}
+
+%% 矢印関係
+\newcommand{\lra}{\Longrightarrow}
+\newcommand{\lla}{\Longleftarrow}
+\newcommand{\ra}{\rightarrow}
+\newcommand{\Lrarw}{\Leftrightarrow}
+\newcommand{\Llrarw}{\Longleftrightarrow}

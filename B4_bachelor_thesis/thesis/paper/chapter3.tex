@@ -1,0 +1,80 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\chapter{SATソルバー複数回起動による極小・極大モデル計算の既存研究} \label{chap:koshimura}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+本章では，論文\cite{koshimura2009minimal}で提案された，SATソルバーを複数回起動することでSAT問題の極小モデルを求める方法について説明する.
+ここでSAT問題を符号化した$P$が与えられたとき，極小モデルは以下の手順で求めることができる.
+\begin{enumerate}
+ \item $P$にSATソルバーを起動し，モデルMを求める
+ \item 1.で求めたモデルMのうち，真として含まれるリテラルを$x_1,...,x_m$とし，偽として含まれるリテラルを$y_1,...,y_n$とし，次のF1,F2を作る
+  \begin{center}
+  F1$~=~\neg (x_1 \land ... \land x_m)$\\
+  F2$~=~\neg y_1 \land ... \land \neg y_n$
+  \end{center}
+ \item $P \coloneq  P \land F1 \land F2$として，SATソルバーを起動する
+ \begin{itemize}
+  \item UNSATならば，モデルMが極小モデル
+  \item SATならば，1.に戻る
+ \end{itemize}
+\end{enumerate}
+アルゴリズムで記述するとAlgorithm\ref{alg:minimal-model}のようになる.
+
+\begin{algorithm}[t]
+ \caption{SATソルバー複数回起動による極小モデル生成}
+ \label{alg:minimal-model}
+ \begin{algorithmic}[1]
+  \Require SAT問題の符号化 $P$
+  \Ensure $P$ の極小モデル $M$（存在しなければ UNSAT）
+
+  \While{\textsc{solve}$(P)$ が SAT を返し，モデル $M$ を得る}
+    \State $X \gets \{x \mid x \text{ は } M \text{ において真となるリテラル}\}$
+    \State $Y \gets \{y \mid y \text{ は } M \text{ において偽となるリテラル}\}$
+    \State \Comment{$X=\{x_1,\dots,x_m\},\;Y=\{y_1,\dots,y_n\}$ とする}
+    \State $F1 \gets \neg(x_1 \land \cdots \land x_m)$ \Comment{$\equiv (\neg x_1 \lor \cdots \lor \neg x_m)$}
+    \State $F2 \gets (\neg y_1) \land \cdots \land (\neg y_n)$
+    \State $P' \gets P \land F1 \land F2$
+    \If{\textsc{solve}$(P')$ が UNSAT}
+        \State \textbf{return} $M$
+    \Else
+        \State $P \gets P'$
+    \EndIf
+  \EndWhile
+  \State \textbf{return} UNSAT
+ \end{algorithmic}
+\end{algorithm}
+
+\begin{example}\rm
+ \ref{sec:defCNF}節の例\ref{ex:CNF}で与えられた式を$P$として，先ほどのアルゴリズムに沿って極小モデルを求めてみる.\\
+（1回目のループ）
+\begin{enumerate}
+ \item $P$にSATソルバーを起動し，$(x_1,x_2,x_3)=(1,1,1)$がモデルMとして求められる
+ \item 1.で求めたモデルMから次のF1，F2を作る
+  \begin{center}
+  F1$~=~\neg (x_1 \land x_2 \land x_3)$\\
+  F2$~=~\top$
+  \end{center}
+ \item $P \coloneq P ~\land ~\neg (x_1 \land x_2 \land x_3)~ \land ~\top$として，SATソルバーを起動すると，SATであるので，1.に戻る.
+\end{enumerate}
+（2回目のループ）
+\begin{enumerate}
+ \item $P \coloneq P ~\land ~\neg (x_1 \land x_2 \land x_3)~ \land ~\top$にSATソルバーを起動すると，$(x_1,x_2,x_3)=(1,1,0)$がモデルMとして求められる.
+ \item 1.で求めたモデルMから次のF1，F2を作る
+  \begin{center}
+  F1$~=~\neg (x_1 \land x_2)$\\
+  F2$~=~\neg x_3$
+  \end{center}
+ \item $P \coloneq P \land \neg (x_1 \land x_2) \land \neg x_3$として，SATソルバーを起動すると，UNSATであるので$(x_1,x_2,x_3)=(1,1,0)$は極小モデルである.
+\end{enumerate}
+以上のようにして，極小モデルが求まる.\\
+ただし，上の例の1.で求まるモデルMはいくつかあり，あくまで一例である.上のような操作を繰り返し行うことで，全ての極小モデルを列挙することができる.\\
+また，先ほどの手順2.におけるF1，F2を以下のように変更すれば，極大モデルを求めることができる.
+\begin{center}
+  F1$~=~\neg (\neg y_1 \land ... \land \neg y_n)$\\
+  F2$~=~x_1 \land ... \land x_m$
+\end{center}
+極小モデルでは，いま見つけたモデルMより真となるリテラルが少ないモデルが存在するかをSATソルバーで調べ、存在しなければモデルMを極小モデルとして返すという計算方法であったので，極大モデルでは，いま見つけたモデルMより偽となるリテラルが少ないモデルが存在するかをSATソルバーで調べ、存在しなければモデルMを極大モデルとして返すという計算方法にしている.\\
+
+% $(x_1,x_2,x_3)=(1,1,1)$がモデルMとして求められたとき，$F1=\neg (x_1 \land x_2 \land x_3)$，$F2=\top$となり，$P \coloneq P ~\land ~\neg (x_1 \land x_2 \land x_3)~ \land ~\top$となる.これはSATであるので，1.に戻り，新たに定義した$P$についてSATソルバーを起動すると，$(x_1,x_2,x_3)=(1,1,0)$または，$(x_1,x_2,x_3)=(1,0,1)$を返す.$(x_1,x_2,x_3)=(1,1,0)$が返ってきたとし，このモデルをMとすると，$P$は新たに$P \coloneq P \land \neg (x_1 \land x_2) \land \neg x_3$となる.これはUNSATであるので極小モデルは$(x_1,x_2,x_3)=(1,1,0)$と求まる.
+
+\end{example}
+

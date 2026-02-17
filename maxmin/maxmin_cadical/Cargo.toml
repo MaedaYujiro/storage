@@ -1,0 +1,11 @@
+[package]
+name = "maxmin_cadical"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+cadical-sys = "0.7"
+cp4rust = { path = "cp4rust" }
+
+[dev-dependencies]
+tempfile = "3"

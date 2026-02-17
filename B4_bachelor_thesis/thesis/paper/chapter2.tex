@@ -1,0 +1,180 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\chapter{命題論理式の極小・極大モデル} \label{chap:maxmin}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\section{SAT問題の定義}
+\label{sec:defSAT}
+本節では，論文\cite{井上克巳2010sat}をもとにSAT問題を定義する.\\
+\textgt{命題論理式}の\textbf{充足可能性判定問題(SAT問題; Boolean Satisfiability Testing Problem)}とは，与えられた命題論理式を充足するような命題変数への値の割り当てが存在するかどうかを判定する問題である．
+
+\begin{definition}[命題変数]\rm
+  \textgt{命題変数}は，1または0の値をとる変数であり，それぞれ\textbf{真(true)}，\textbf{偽(false)}を表す．
+\end{definition}
+
+\begin{definition}[命題論理式]\rm
+命題変数の集合を $V$ とする．\textgt{命題論理式}の集合 $\mathrm{Form}(V)$ を次の生成規則により再帰的に定義する．
+\begin{itemize}
+ \item （原子式）任意の $x \in V$ は命題論理式である（すなわち $x \in \mathrm{Form}(V)$）．
+ \item （否定）$\psi \in \mathrm{Form}(V)$ ならば，$\neg \psi \in \mathrm{Form}(V)$．
+ \item （二項結合）$\psi_1,\psi_2 \in \mathrm{Form}(V)$ ならば，
+       $(\psi_1 \land \psi_2)$，$(\psi_1 \lor \psi_2)$，$(\psi_1 \to \psi_2)$ は命題論理式である．
+\end{itemize}
+ここで用いる論理結合子は表\ref{tab:logconnect}に示す4種類である．
+\begin{table}[h]
+ \centering
+ \caption{論理結合子}
+ \label{tab:logconnect}
+ \begin{tabular}{c l l}
+ \hline
+ 記号 & 意味 & \quad 英語 \\ \hline
+ \(\land\) & かつ，連言 & and, conjunction \\
+ \(\lor\)  & または，選言 & or, disjunction \\
+ \(\to\) & ならば，含意 & implies, implication \\
+ \(\neg\) & でない，否定 & not, negation \\
+ \hline
+ \end{tabular}
+\end{table}
+\end{definition}
+
+\begin{definition}[充足]\rm
+$V$ に対する真偽値割り当て（解釈）を $I:V \rightarrow \{1,0\}$ とする．任意の命題論理式 $\psi \in \mathrm{Form}(V)$ に対し，$I$ が $\psi$ を充足すること（$I \models \psi$）を次のように再帰的に定義する．また，$I \models \psi$ が成り立たないことを $I \not\models \psi$ と表す．
+\begin{itemize}
+ \item （原子式）$I \models x \Leftrightarrow I(x)=1$ \quad（$x \in V$）
+ \item （否定）$I \models \neg \psi \Leftrightarrow I \not\models \psi$
+ \item （連言）$I \models (\psi_1 \land \psi_2) \Leftrightarrow (I \models \psi_1 \ \text{かつ}\ I \models \psi_2)$
+ \item （選言）$I \models (\psi_1 \lor \psi_2) \Leftrightarrow (I \models \psi_1 \ \text{または}\ I \models \psi_2)$
+ \item （含意）$I \models (\psi_1 \to \psi_2) \Leftrightarrow (I \not\models \psi_1 \ \text{または}\ I \models \psi_2)$
+\end{itemize}
+\end{definition}
+
+% \begin{definition}[命題論理式]\rm
+%  \textgt{命題論理式}は，命題変数に対して，\textbf{論理結合子(operator)}を再帰的に適用したものである． \\
+%  論理結合子には，表\ref{tab:logconnect}に示す4種類がある.
+% \end{definition}
+
+% \begin{table}[ht]
+%  \centering
+%  \caption{論理結合子}
+%  \label{tab:logconnect}
+%  \begin{tabular}{c l l}
+%  \hline
+%  記号 & 意味 & \quad 英語 \\ \hline
+%  \(\land\) & かつ，連言 & and, conjunction \\
+%  \(\lor\)  & または，選言 & or, disjunction \\
+%  \(\to\) & ならば，含意 & implies, implication \\
+%  \(\neg\) & でない，否定 & not, negation \\
+%  \hline
+%  \end{tabular}
+% \end{table}
+
+% 命題変数の集合$V$を考える．$V$に対する\textbf{真偽値割り当て}$I:V \rightarrow \{1,0\}$と命題論理式$\psi$が与えられたとき，$\psi$の真偽値を以下のように再帰的に定義する．ここで，$I$により$\psi$に真が割り当てられるとき，$I$は$\psi$を\textbf{充足する} (satisfy) といい，$I \models \psi$と表す．また，$I \models \psi$が成り立
+% たないことを$I \not\models \psi$と表す．
+% \clearpage
+% \begin{definition}[充足]\rm
+%  以下，$\psi$，$\psi_1$，$\psi_2$を任意の論理式とする．
+%  \begin{itemize}
+%   \item 命題変数$x$に対して，$I \models x \Leftrightarrow I\left( x \right) = 1$
+%   \item $I \models \neg \psi \Leftrightarrow I \not\models \psi$
+%   \item $I \models \psi_1 \vee \psi_2 \Leftrightarrow I \models \psi_1$または$I \models \psi_2$
+%   \item $I \models \psi_1 \wedge \psi_2 \Leftrightarrow I \models \psi_1$かつ$I \models \psi_2$
+%  \end{itemize}
+% \end{definition}
+
+\begin{definition}[モデル]\rm
+ 割り当て$I$が命題論理式$\psi$を充足するとき，$I$は$\psi$の\textbf{モデル(model)}であるという．
+\end{definition}
+\begin{definition}[充足可能]\rm
+ 命題論理式$\psi$にモデルが存在するとき，命題論理式$\psi$は\textbf{充足可能(satisfiable)}であるという．
+\end{definition}
+\begin{definition}[充足不能]\rm
+ 命題論理式$\psi$にモデルが存在しないとき，命題論理式$\psi$は\textbf{充足不能(unsatisfiable)}であるという．
+\end{definition}
+
+\begin{example}\rm
+ 命題変数の集合を$V=\{ x_1,x_2\}$，命題論理式$\psi$が以下のように与えられているとする.
+ \begin{center}
+  $\psi ~=~ (x_1 \lor x_2) \land (\neg x_1 \lor x_2)$
+ \end{center}
+ また，割り当て$I_1,I_2$が以下のように与えられているとする.
+ \begin{center}
+  $I_1(x_1)=1,I_1(x_2)=0$\\
+  $~I_2(x_1)=0,I_2(x_2)=1$
+ \end{center}
+ このとき，$I_1\models (x_1\lor x_2)$は真であるが，$I_1\models (\neg x_1\lor x_2)$は偽であるので，$I_1\not\models \psi$.\\
+ 一方で，$I_2\models (x_1\lor x_2)$，$I_2\models (\neg x_1\lor x_2)$は共に真であるので，$I_2\models \psi$より，$I_2$は$\psi$のモデルである. すなわち，$\psi$は充足可能である.
+\end{example}
+
+\section{CNFの定義}
+\label{sec:defCNF}
+SAT問題においては，以下で定義する\textbf{連言標準形(Conjunctive Normal Form;CNF)}を入力とすることが一般的であり，本論文でもSAT問題はCNFで与えられるものとする．\\
+\begin{definition}[リテラル]\rm
+ \textbf{リテラル(literal)}とは，命題変数 $x$ またはその否定 $\neg x$ であり，前者を正リテラル，後者を負リテラルと呼ぶ.
+\end{definition}
+\begin{definition}[節]\rm
+ \textbf{節(clause)}とは，リテラルの選言 ($\vee$；OR) ，すなわち，リテラルを論理和$\vee$で結合した論理式である.
+\end{definition}
+\begin{definition}[CNF]\rm
+ \textbf{CNF(Conjunctive Normal Form;連言標準形)}とは，節の連言（$\wedge$；AND），すなわち，節を論理積$\wedge$で結合した論理式である.
+\end{definition}
+
+\begin{example}\rm
+ \label{ex:CNF}
+ CNF$\psi$が以下のように与えられているとする：\\
+ \begin{center}
+  $(x_1\lor x_2)\land (x_1\lor \neg x_2)\land (x_1 \lor \neg x_3) \land (x_2\lor x_3)$
+ \end{center}
+ このとき，割り当て$(x_1,x_2,x_3)=(1,0,1)$は$\psi$を充足するため，$\psi$は充足可能である（SAT）.他の$\psi$のモデルとして，$(1,1,0)$と$(1,1,1)$が存在する.\\
+ 一方，CNF$\psi' =\psi \land (\neg x_1)$は充足不能となる（UNSAT).なぜなら，$\psi$の任意のモデル$I$において，$I(x_1)=1$であり，$I\not\models \neg x_1$であるため，$I \not\models \psi'$となるからである.
+\end{example}
+\section{極大モデル，極小モデルの定義}
+\label{sec:defmaxmin}
+本節では，論文\cite{長谷川隆三2010モデル列挙とモデル計数}をもとに極大モデル，極小モデルを定義する.\\
+CNFのモデルは，そのモデルで真と解釈される変数の集合で表現することができる．例えば，$x_1$を真， $x_2$を偽，$x_3$を真，と解釈するモデルは変数集合$\{x_1,x_3\}$で表現できる．このように表すことにより，特定のモデル間に包含関係が導入され，モデル間の大小関係を自然に導入できる.例えば，モデル$\{ x_1,x_3\}$はモデル$\{ x_1,x_2,x_3\}$より包含関係上で小さい.繰り返しになるが，モデル間にこのような包含関係を導入したとき，極大モデル，極小モデルを以下のようにも表すことができる.
+また，本論文では，理解のしやすさのためモデルMを次のように定義する.
+\begin{definition}[モデルM]\rm
+ 命題論理式$\psi$のモデル$I:V\to \{ 0,1\}$に対し，モデルMを以下のように定義する.
+ \begin{center}
+  $M~=~\{ v \mid I(v)=1\}$
+ \end{center}
+\end{definition}
+\begin{definition}\rm
+ $M_1$, $M_2$を変数集合とする．このとき，$M_1$が$M_2$より大きいとは， $M_2$が $M_1$の真部分集合であることをいう．
+\end{definition}
+\begin{definition}[極大モデル]\rm
+ $\psi$を命題論理式， $M$を$\psi$のモデルとする． このとき， $M$が$\psi$の\textbf{極大モデル}である， とは，$M$より大きい$\psi$のモデルが存在しないことをいう．
+\end{definition}
+\begin{definition}\rm
+$M_1$, $M_2$を変数集合とする．このとき，$M_1$が$M_2$より小さいとは， $M_1$が $M_2$の真部分集合であることをいう．
+\end{definition}
+\begin{definition}[極小モデル]\rm
+$\psi$を命題論理式， $M$を$\psi$のモデルとする． このとき， $M$が$\psi$の\textbf{極小モデル}である， とは，$M$より小さい$\psi$のモデルが存在しないことをいう．
+\end{definition}
+\begin{example}\rm
+ \ref{sec:defCNF}節の例\ref{ex:CNF}で挙げたCNF$\psi$の場合，極小モデル，極大モデルは表\ref{tab:psi-models}のようになる.
+ \begin{table}[ht]
+  \centering
+   \caption{$\psi$のモデルと極小・極大モデル}
+   \label{tab:psi-models}
+   \begin{tabular}{c c c}
+    \toprule
+    モデル$(x_1,x_2,x_3)$ & 真になる変数集合 & 区分 \\ 
+    \midrule
+     $(1,0,1)$ & $\{x_1,x_3\}$ & 極小モデル \\
+     $(1,1,0)$ & $\{x_1,x_2\}$ & 極小モデル \\
+     $(1,1,1)$ & $\{x_1,x_2,x_3\}$ & 極大モデル \\
+    \bottomrule
+   \end{tabular}
+ \end{table}
+ 今回の例のモデルは極小，極大モデルのみであったが，一般的な問題では極小，極大モデルのどちらでもないモデルが存在する.
+\end{example}
+
+ % \ref{sec:defCNF}節の例\ref{ex:CNF}で挙げたCNF$\psi$の場合，$\psi$のモデルは$(x_1,x_2,x_3)=(1,0,1),(1,1,0),(1,1,1)$であった.このとき，$(x_1,x_2,x_3)=(1,0,1),(1,1,0)$は$(x_1,x_2,x_3)=(1,1,1)$の真部分集合であるため，$(x_1,x_2,x_3)=(1,1,1)$は$(x_1,x_2,x_3)=(1,0,1),(1,1,0)$より大きい.また，$(x_1,x_2,x_3)=(1,1,1)$より大きい$\psi$のモデルは存在しないので，$(x_1,x_2,x_3)=(1,1,1)$は$\psi$の極大モデルである.\\
+ % また，$(x_1,x_2,x_3)=(1,0,1),(1,1,0)$より小さい$\psi$のモデルは存在しないので，$(x_1,x_2,x_3)=(1,0,1),(1,1,0)$は$\psi$の極小モデルである.
+
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+
+
+
+
+
+
+
