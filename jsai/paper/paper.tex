@@ -2,6 +2,7 @@
 
 \usepackage{jsaiac}
 \usepackage{color}
+\usepackage[table]{xcolor}
 
 \input{macro}
 
@@ -72,14 +73,18 @@
 
 極小モデル・極大モデルとは，モデル集合に包含関係を導入し，真の変数集合をこれ以上減らせない・増やせないモデルである．
 これらは非単調推論に基づく常識推論の意味論的基盤を成すとともに，極小支配集合や極大独立集合，多目的最適化におけるパレートフロントの計算など，幅広い応用を持つ~\cite{niemela96,soh}．
-既存手法~\cite{koshimura2009minimal}ではSATソルバーを複数回起動してモデルを段階的に縮小・拡大するが，起動回数の増加と極小性・極大性の保証のための充足不能性判定により計算コストが大きい．
 
-そこで本発表では，連言標準形（CNF）に制約を追加するSAT符号化により，SATソルバー1回の起動で1つの極小・極大モデルを得る手法を提案する．
-本発表の貢献は以下の通りである．
-\begin{itemize}
-  \item 極小モデルに対しては各正リテラルに，極大モデルに対しては各負リテラルに着目し，他リテラルで節が充足される場合に当該変数の真偽を定める制約を追加するCNF変換を提案した．
-  \item 提案手法をSATソルバーとRust言語で実装し，極小支配集合問題（MDS）と極大独立集合問題（MIS）の計32問のベンチマークで評価を行った結果，提案手法が既存手法より多くの問題を高速に解くことを確認した．
-\end{itemize}
+既存手法~\cite{koshimura2009minimal}として，SATソルバーを用いて
+モデルを複数求めながら徐々に小さく・大きくしていく反復起動法が提案されている．
+しかし，SATソルバーの呼び出し回数が多くなることが問題であった．
+
+本稿では，連言標準形（CNF）に制約を追加することで得られた
+新しいCNFのモデルが元のCNFの極小・極大モデルに一致するような変換方法を提案する．
+これによりSATソルバーでモデルを計算し，1つの極小・極大モデルを得る手法を提案する．
+本稿の貢献は主に2点である．
+1つは，極小モデルに対しては各正リテラルに，極大モデルに対しては各負リテラルに着目し，他リテラルで節が充足される場合に当該変数の真偽を強制する制約を追加するCNF変換を提案したことである．
+2つ目は，提案手法をSATソルバーとRust言語で実装し，極小支配集合問題（MDS）と極大独立集合問題（MIS）の計32問のベンチマークで評価を行った結果，提案手法が既存手法より多くの問題を高速に解くことを確認したことである．
+%以下では，準備として定義と既存手法を述べた後，提案するCNF変換，変換例，実験結果を順に示す．
 
 %%% 準備 %%%
 \section{準備}
@@ -90,7 +95,7 @@
 
 命題変数$x$またはその否定$\neg x$を\textbf{リテラル}と呼び，前者を正リテラル，後者を負リテラルと呼ぶ．
 リテラルの選言（論理和）を\textbf{節}，節の連言（論理積）を\textbf{CNF（連言標準形）}と呼ぶ．
-本発表ではSAT問題の入力はCNFで与えられるものとし，CNFを節の集合，節をリテラルの集合とみなす．
+本稿ではSAT問題の入力はCNFで与えられるものとし，CNFを節の集合，節をリテラルの集合とみなす．
 命題変数への真偽値割り当て$I$がCNF $\Phi$を充足するとき，$I$を$\Phi$の\textbf{モデル}と呼ぶ．
 モデルが存在するとき$\Phi$は\textbf{充足可能}，存在しないとき\textbf{充足不能}であるという．
 また，$\top$は恒真，$\bot$は恒偽を表し，CNF $\Phi$の変数集合を$\mathrm{Var}(\Phi)$と書く．
@@ -121,7 +126,7 @@ $\{x_1,x_3\}$と$\{x_1,x_2\}$はいずれもその真部分集合に$\Phi$のモ
 \end{example}
 
 %%% 既存手法 %%%
-\subsection{SATソルバー複数回起動による極小・極大モデル計算}
+\subsection{反復起動法による極小・極大モデル計算}
 \label{chap:koshimura}
 
 論文\cite{koshimura2009minimal}では，SATソルバーを複数回起動して極小モデルを求める方法（以下，反復起動法）が提案されている．
@@ -158,7 +163,7 @@ $F_1$は$M$より真の変数が少ないモデルの探索を，$F_2$は$M$で�
 
     \draw[arr] (in1) -- (sat1);
     \draw[arr] (sat1) -- node[above, font=\scriptsize]{$M$} (check);
-    \draw[arr] (check) -- node[above, font=\scriptsize]{Yes} (out1);
+    \draw[arr] (check) -- node[above, font=\scriptsize]{\hspace{-0.1cm}Yes} (out1);
     \draw[arr] (check) -- node[right, font=\scriptsize]{No} (add);
     \draw[arr] (add) -- (sat1);
   \end{tikzpicture}
@@ -167,15 +172,15 @@ $F_1$は$M$より真の変数が少ないモデルの探索を，$F_2$は$M$で�
 
   %% 提案手法
   \begin{tikzpicture}[
-    node distance=4mm and 3mm,
-    box/.style={draw, rounded corners, minimum height=6mm, minimum width=14mm, align=center, font=\small},
+    node distance=4mm and 2.5mm,
+    box/.style={draw, rounded corners, minimum height=6mm, minimum width=12mm, align=center, font=\small},
     io/.style={draw, minimum height=6mm, minimum width=12mm, align=center, font=\small},
     arr/.style={->, >=stealth, thick},
   ]
     \node[font=\small\bfseries] (title2) {提案手法（CNF変換）};
     \node[io, below=of title2] (in2) {CNF $\Phi$};
     \node[box, right=of in2] (trans) {CNF\\変換};
-    \node[io, right=of trans] (mid2) {$\Omega$};
+    \node[io, right=of trans] (mid2) {CNF $\Omega$};
     \node[box, right=of mid2] (sat2) {SAT\\ソルバー};
     \node[io, right=of sat2] (out2) {極小/極大\\モデル};
 
@@ -188,40 +193,41 @@ $F_1$は$M$より真の変数が少ないモデルの探索を，$F_2$は$M$で�
   \label{fig:flow}
 \end{figure}
 
-\begin{algorithm}[t]
-\caption{CNF変換アルゴリズム（min/max統一）}
-\label{alg:trans-minmax}
-\begin{algorithmic}[1]
-\Require CNF $\Phi$, mode $\in \{\mathrm{min},\mathrm{max}\}$
-\Ensure  CNF $\Omega$
-\State $V \gets \mathrm{Var}(\Phi)$;\quad $C \gets \top$
-\ForAll{$x \in V$}
-  \State $d_1 \gets \bot$
-  \If{mode $=$ min}
-    $t \gets x$;\quad $h \gets \neg x$
-  \Else\quad $t \gets \neg x$;\quad $h \gets x$
-  \EndIf
-  \ForAll{$c \in \Phi$ \textbf{s.t.} $t \in c$}
-    \State $a \gets$ new variable;\quad $d_2 \gets \bot$
-    \ForAll{$l \in c$ \textbf{s.t.} $l \neq t$}
-      \State $C \gets C \wedge (\neg a \vee \neg l)$;\quad $d_2 \gets d_2 \vee l$
-    \EndFor
-    \State $C \gets C \wedge (d_2 \vee a)$;\quad $d_1 \gets d_1 \vee a$
-  \EndFor
-  \State $C \gets C \wedge (h \vee d_1)$
-\EndFor
-\State \textbf{return} $\Omega \gets \Phi \wedge C$
-\end{algorithmic}
-\end{algorithm}
+% \begin{algorithm}[t]
+% \caption{CNF変換アルゴリズム（min/max統一）}
+% \label{alg:trans-minmax}
+% \begin{algorithmic}[1]
+% \Require CNF $\Phi$, mode $\in \{\mathrm{min},\mathrm{max}\}$
+% \Ensure  CNF $\Omega$
+% \State $V \gets \mathrm{Var}(\Phi)$;\quad $C \gets \top$
+% \ForAll{$x \in V$}
+%   \State $d_1 \gets \bot$
+%   \If{mode $=$ min}
+%     $t \gets x$;\quad $h \gets \neg x$
+%   \Else\quad $t \gets \neg x$;\quad $h \gets x$
+%   \EndIf
+%   \ForAll{$c \in \Phi$ \textbf{s.t.} $t \in c$}
+%     \State $a \gets$ new variable;\quad $d_2 \gets \bot$
+%     \ForAll{$l \in c$ \textbf{s.t.} $l \neq t$}
+%       \State $C \gets C \wedge (\neg a \vee \neg l)$;\quad $d_2 \gets d_2 \vee l$
+%     \EndFor
+%     \State $C \gets C \wedge (d_2 \vee a)$;\quad $d_1 \gets d_1 \vee a$
+%   \EndFor
+%   \State $C \gets C \wedge (h \vee d_1)$
+% \EndFor
+% \State \textbf{return} $\Omega \gets \Phi \wedge C$
+% \end{algorithmic}
+% \end{algorithm}
 
-本節では，CNFに制約を追加することでSATソルバー1回の起動で極小・極大モデルを計算する手法を述べる．
+図\ref{fig:flow}に既存手法と提案手法の処理の流れを示す．既存手法はモデル更新と制約追加を反復するのに対し，提案手法は入力CNFを一度変換してからモデル計算を行う．
+本節では，CNFに制約を追加することでSATソルバー1回の起動で1つの極小・極大モデルを計算する手法を述べる%
+\footnote{ここでは一般のCNFではなく単調な節を対象とする~\cite{adachi2023}.}．
 まず極小モデルの変換を，次に極大モデルの変換を示す．
-さらに，これらの変換をCNFとして実現するためのアルゴリズムを示す．
 
 \subsection{極小モデルのためのCNF変換}
 \label{sec:mintrans}
 
-CNF $\Phi$の各正リテラルに注目し，変数$x$が正リテラルとして現れる全ての節が$x$なしでも充足されるならば$x$を偽にする制約を追加する変換を定義する．
+CNF $\Phi$の各正リテラルに注目し，できる限り真となる変数を減らすため，変数$x$が正リテラルとして現れる全ての節が$x$なしでも充足されるならば，$x$を偽にしてよいという制約を追加する変換を定義する．
 変換後のCNFを$\Omega_{min} = \Phi \land R_{min}(\Phi)$とする．
 \begin{equation}\label{fom:min}
 \begin{aligned}
@@ -229,13 +235,15 @@ CNF $\Phi$の各正リテラルに注目し，変数$x$が正リテラルとし�
   Cl_{min}(\Phi,x) &= \bigwedge_{c \in \Phi,\, x \in c} c \setminus \{x\}
 \end{aligned}
 \end{equation}
-すなわち，$x$を含む全ての節が$x$以外のリテラルで充足される場合に$x$を偽にする．$x$が正リテラルとしてどの節にも現れない場合は単位節（リテラル1つからなる節）$\neg x$が追加される．
+ここで$Cl_{min}(\Phi,x)$は，$x$を含む全ての節から$x$を除いたものの連言である．
+$Cl_{min}(\Phi,x)$が充足されるとは，$x$を含む全ての節が$x$以外のリテラルで充足されることを意味し，この場合に$x$を偽にしても$\Phi$の充足性は保たれる．
+$x$が正リテラルとしてどの節にも現れない場合は$Cl_{min}(\Phi,x) = \top$となり，単位節（リテラル1つからなる節）$\neg x$が追加される．
 
 \subsection{極大モデルのためのCNF変換}
 \label{sec:maxtrans}
 
 極小モデルの変換が正リテラルに注目したのに対し，極大モデルでは負リテラルに注目する．
-できる限り偽となる変数を減らすため，「変数$x$が負リテラルとして現れる全ての節が$\neg x$なしでも充足されるならば，$x$を真にしてよい」という制約を追加する．
+できる限り偽となる変数を減らすため，変数$x$が負リテラルとして現れる全ての節が$\neg x$なしでも充足されるならば，$x$を真にしてよいという制約を追加する変換を定義する．
 これは極小変換と双対的な関係にあり，正リテラルと負リテラル，真と偽の役割を入れ替えたものである．
 変換後のCNFを$\Omega_{max} = \Phi \land R_{max}(\Phi)$とする．
 \begin{equation}\label{fom:max}
@@ -244,18 +252,18 @@ CNF $\Phi$の各正リテラルに注目し，変数$x$が正リテラルとし�
   Cl_{max}(\Phi,\neg x) &= \bigwedge_{c \in \Phi,\, \neg x \in c} c \setminus \{\neg x\}
 \end{aligned}
 \end{equation}
-ここで$Cl_{max}(\Phi,\neg x)$は，$\neg x$を含む全ての節から$\neg x$を除いたものの連言である．
-$Cl_{max}(\Phi,\neg x)$が充足されるとは，$\neg x$を含む全ての節が$\neg x$以外のリテラルで充足されることを意味し，この場合に$x$を真にしても$\Phi$の充足性は保たれる．
-$\neg x$がどの節にも現れない場合は$Cl_{max}(\Phi,\neg x) = \top$となり，単位節$x$が追加される．
+ここで，$Cl_{max}(\Phi,\neg x)$は，極小モデル変換の$Cl_{min}(\Phi,x)$の逆の意味を持つ．
+すなわち，$\neg x$を含む全ての節が$\neg x$以外のリテラルで充足される場合に$x$を真にし，$x$が負リテラルとしてどの節にも現れない場合は単位節$x$が追加される．
 
-\subsection{変換アルゴリズム}
-\label{sec:algo}
 
-式(\ref{fom:min})，(\ref{fom:max})の変換を統一的に実現するアルゴリズムをAlgorithm~\ref{alg:trans-minmax}に示す．
-入力はCNF $\Phi$とmode $\in \{\mathrm{min}, \mathrm{max}\}$であり，出力は変換後のCNF $\Omega$である．
-各変数$x$に対し，modeに応じて注目リテラル$t$と含意先$h$を選ぶ（min: $t{=}x, h{=}\neg x$，max: $t{=}\neg x, h{=}x$）．
-$t$を含む各節について補助変数$a$を導入し，「その節で$t$以外が全て偽」を表す指示変数とする．
-最後に$(h \lor d_1)$を追加し，$h$を偽にするには$d_1$が真であること（$t$に依存する節の存在）を要求する．
+% \subsection{変換アルゴリズム}
+% \label{sec:algo}
+
+% 式(\ref{fom:min})，(\ref{fom:max})の変換を統一的に実現するアルゴリズムをAlgorithm~\ref{alg:trans-minmax}に示す．
+% 入力はCNF $\Phi$とmode $\in \{\mathrm{min}, \mathrm{max}\}$であり，出力は変換後のCNF $\Omega$である．
+% 各変数$x$に対し，modeに応じて注目リテラル$t$と含意先$h$を選ぶ（min: $t{=}x, h{=}\neg x$，max: $t{=}\neg x, h{=}x$）．
+% $t$を含む各節について補助変数$a$を導入し，「その節で$t$以外が全て偽」を表す指示変数とする．
+% 最後に$(h \lor d_1)$を追加し，$h$を偽にするには$d_1$が真であること（$t$に依存する節の存在）を要求する．
 
 \begin{table*}[t]
   \centering
@@ -282,33 +290,32 @@ $t$を含む各節について補助変数$a$を導入し，「その節で$t$�
   \end{tabular}
 \end{table*}
 
-\section{変換の例}
+\subsection{変換の例}
 \label{sec:transex}
 
-\begin{example}[極小モデル変換]\rm
-\label{ex:minPhi}
-$\Phi = (x_1 \lor \neg x_2 \lor x_3) \land (x_2 \lor x_3) \land (x_3 \lor \neg x_4)$ に対する極小変換を以下に示す．
-$\Omega_{min}$のモデルとして極小モデル$\{x_3\}$と$\{x_1,x_2\}$が得られる．
+% \begin{example}[極小モデル変換]\rm
+% \label{ex:minPhi}
+% $\Phi = (x_1 \lor \neg x_2 \lor x_3) \land (x_2 \lor x_3) \land (x_3 \lor \neg x_4)$ に対する極小変換を以下に示す．
+% $\Omega_{min}$のモデルとして極小モデル$\{x_3\}$と$\{x_1,x_2\}$が得られる．
 
-\medskip
-\centering
-\begin{tabular}{c l l}
-  \toprule
-  変数 & $Cl_{min}(\Phi,x)$ & 追加制約 \\
-  \midrule
-  $x_1$ & $\neg x_2 \lor x_3$ & $(\neg x_2 \lor x_3) \to \neg x_1$ \\
-  $x_2$ & $x_3$ & $x_3 \to \neg x_2$ \\
-  $x_3$ & $(x_1 \!\lor\! \neg x_2) \!\land\! x_2 \!\land\! \neg x_4$ & $((x_1 \!\lor\! \neg x_2) \!\land\! x_2 \!\land\! \neg x_4) \!\to\! \neg x_3$ \\
-  $x_4$ & （正リテラルなし） & $\neg x_4$ \\
-  \bottomrule
-\end{tabular}
-\flushleft
-\end{example}
+% \medskip
+% \centering
+% \begin{tabular}{c l l}
+%   \toprule
+%   変数 & $Cl_{min}(\Phi,x)$ & 追加制約 \\
+%   \midrule
+%   $x_1$ & $\neg x_2 \lor x_3$ & $(\neg x_2 \lor x_3) \to \neg x_1$ \\
+%   $x_2$ & $x_3$ & $x_3 \to \neg x_2$ \\
+%   $x_3$ & $(x_1 \!\lor\! \neg x_2) \!\land\! x_2 \!\land\! \neg x_4$ & $((x_1 \!\lor\! \neg x_2) \!\land\! x_2 \!\land\! \neg x_4) \!\to\! \neg x_3$ \\
+%   $x_4$ & （正リテラルなし） & $\neg x_4$ \\
+%   \bottomrule
+% \end{tabular}
+% \flushleft
+% \end{example}
 
 \begin{example}[極大モデル変換]\rm
 \label{ex:maxPhi}
 $\Phi = (\neg x_1 \lor x_2 \lor \neg x_3) \land (\neg x_2 \lor \neg x_3) \land (\neg x_3 \lor x_4)$ に対する極大変換を以下に示す．
-$\Omega_{max}$のモデルとして極大モデル$\{x_2,x_3,x_4\}$と$\{x_1,x_2,x_4\}$が得られる．
 
 \medskip
 \centering
@@ -324,6 +331,44 @@ $\Omega_{max}$のモデルとして極大モデル$\{x_2,x_3,x_4\}$と$\{x_1,x_2
 \end{tabular}
 \flushleft
 \end{example}
+
+また，各変数に対して追加された制約を満たさない$\Phi$のモデルと最終的に得られる極大モデルの関係を以下の表に示す．
+この表の各列は変数$x_i$に対して追加された制約を満たさない$\Phi$のモデルを$\surd$で示し，最後の列は$\Phi$の極大モデル ($\Omega_{max}$のモデル) を$\surd$で示す．
+$\Phi$のモデルは
+$(x_1,x_2,x_3,x_4)=(0,0,0,0)$，$(0,0,0,1)$，$(0,0,1,1)$，$(0,1,0,0)$，$(0,1,0,1)$，$(1,0,0,0)$，$(1,0,0,1)$，$(1,1,0,0)$，$(1,1,0,1)$
+の9個である．
+例えば，変数$x_1$に注目すると，1つ目の節で負リテラルとして出現しているため，変数$x_1$以外の変数で他の節が真である時，変数$x_1$が真となる制約$(x_2 \vee \neg x_3) \rightarrow x_1$を追加する．
+モデル$(0,0,0,0)$，$(0,0,0,1)$，$(0,1,0,0)$，$(0,1,0,1)$はこの制約を満たさないため，$\Omega_{max}$のモデルではない．
+このように各変数に対して制約を追加することで，$\Omega_{max}$のモデルとして$\Phi$の極大モデル$\{x_3,x_4\}$と$\{x_1,x_2,x_4\}$が得られる．
+
+\medskip
+
+\begin{center}
+\begin{tabular}{c|c|c|c|c|c}
+ \toprule
+ モデル & $x_1$ & $x_2$ & $x_3$ & $x_4$ & 極大 \\
+ \midrule
+ (0,0,0,0) & $\surd$ & $\surd$ & & $\surd$ & \\
+ \hline
+ (0,0,0,1) & $\surd$ & $\surd$ & $\surd$ & & \\
+ \hline
+ \rowcolor{gray!15}(0,0,1,1) & & & & & $\surd$ \\
+ \hline
+ (0,1,0,0) & $\surd$ & & & $\surd$ & \\
+ \hline
+ (0,1,0,1) & $\surd$ & & & & \\
+ \hline
+ (1,0,0,0) & & $\surd$ & & $\surd$ & \\
+ \hline
+ (1,0,0,1) & & $\surd$ & & & \\
+ \hline
+ (1,1,0,0) & & & & $\surd$ & \\
+ \hline
+ \rowcolor{gray!15}(1,1,0,1) & & & & & $\surd$ \\
+ \bottomrule
+\end{tabular}
+\end{center}
+
 
 %%% 実験 %%%
 \section{実行実験}
@@ -418,7 +463,7 @@ $\Omega_{max}$のモデルとして極大モデル$\{x_2,x_3,x_4\}$と$\{x_1,x_2
 
 \subsection{実験設定}
 
-提案手法（trans）と既存の反復起動法（basic）~\cite{koshimura2009minimal}の性能を比較するため，極小支配集合問題（MDS）と極大独立集合問題（MIS）を対象に実験を行った．
+提案手法と既存の反復起動法~\cite{koshimura2009minimal}の性能を比較するため，極小支配集合問題（MDS）と極大独立集合問題（MIS）を対象に実験を行った．
 ベンチマークには3行$n$列（$n=1,\dots,19$）のGrid graphを用い，全ての極小・極大モデルを列挙するCPU時間を測定した．列挙はモデルが得られるたびにそのモデルを禁止するブロッキング節を追加し再度SATソルバーを起動することで行った．
 Grid graphとは整数格子上の点を頂点とし，上下左右に隣接する点同士を辺で結んだグラフである．
 MDSでは全頂点が支配集合の頂点自身またはその隣接頂点で覆われる極小な頂点集合を，MISでは集合内の頂点同士が隣接しない極大な頂点集合を，それぞれ列挙する．
@@ -426,23 +471,27 @@ MDSでは全頂点が支配集合の頂点自身またはその隣接頂点で�
 
 \subsection{結果と考察}
 
+\indent 表\ref{tab:cnf-calls}にCNFサイズとSATソルバー起動回数を示す．
+提案手法では変換により補助変数が導入されCNFサイズは増加するが，起動回数は解の数と一致し大幅に削減される．
+例えば$3\times8$のMDSで既存手法は17406回起動するのに対し，提案手法は3660回（約21\%）である．
+このようなSATソルバー起動回数の減少は，SATソルバー起動に伴うオーバーヘッドの削減につながるため，CPU時間短縮に寄与していると考えられる．
+また，MISの方がMDSより性能差が大きい要因として，MDSでは問題のCNF符号化において補助変数が多く導入されCNFが複雑化する点が挙げられる．
+
 表\ref{tab:mds-mis-results}および図\ref{img:mds-plot}，\ref{img:mis-plot}に結果を示す．
-MDSでは，basicが$3\times10$まで解けたのに対し，transは$3\times12$まで解けた．$3\times10$ではbasicが1361.24秒に対しtransは3.62秒であり大幅に高速化された．
-MISでは，basicが$3\times13$まで解けたのに対し，transは$3\times18$まで解けた．$3\times13$ではbasicが584.70秒に対しtransは0.36秒であった．
+MDSでは，既存手法が$3\times10$まで解けたのに対し，提案手法は$3\times12$まで解けた．$3\times10$では既存手法が1361.24秒に対し提案手法は3.62秒であり大幅に高速化された．
+MISでは，既存手法が$3\times13$まで解けたのに対し，提案手法は$3\times18$まで解けた．$3\times13$では既存手法が584.70秒に対し提案手法は0.36秒であった．
+図\ref{img:mds-plot}および，\ref{img:mis-plot}においても，いずれの問題設定で提案手法のグラフが既存手法のグラフよりも下側かつ右側に位置している．
+これらのことから，提案手法は既存手法に比べて同一問題をより短時間で解けるだけでなく，制限時間内に解ける問題サイズの上限も拡大しており，総合的に高い性能を示すことが分かる．
 
 図\ref{img:model-discovery}にSATソルバー起動CPU時間の内訳，図\ref{img:model-times}に各モデル計算のCPU時間推移を示す．
 既存手法では頻繁なソルバー起動がオーバーヘッドとなるのに対し，提案手法では起動回数が大幅に抑制され，モデル数増加に伴う計算時間も安定している．
-
-表\ref{tab:cnf-calls}にCNFサイズとSATソルバー起動回数を示す．
-提案手法では変換により補助変数が導入されCNFサイズは増加するが，起動回数は解の数と一致し大幅に削減される．
-例えば$3\times8$のMDSで既存手法は17406回起動するのに対し，提案手法は3660回（約21\%）である．
-MISの方がMDSより性能差が大きい要因として，MDSでは問題のCNF符号化において補助変数が多く導入されCNFが複雑化する点が挙げられる．
+これは提案手法が大規模な解空間を持つ問題に対しても，高速に解を列挙し続けられることを示しており，CPU時間の短縮を裏付けるものである．
 
 %%% おわりに %%%
 \section{おわりに}
 \label{chap:conclusion}
 
-本発表では，SAT符号化に基づくCNF変換により，SATソルバー1回の起動で1つの極小・極大モデルを得る手法を提案した．
+本稿では，SAT符号化に基づくCNF変換により，SATソルバー1回の起動で1つの極小・極大モデルを得る手法を提案した．
 極小モデルでは各正リテラルに，極大モデルでは各負リテラルに着目し，他リテラルで節が充足される場合に当該変数の真偽を定める制約を追加するCNF変換を定式化・実装した．
 Grid graphに基づくベンチマーク実験の結果，MDS・MISのいずれにおいても提案手法が既存手法より解ける問題サイズの拡大とCPU時間の大幅な短縮を達成した．
 
